@@ -619,6 +619,7 @@ GameObject:
   - component: {fileID: 1304753254}
   - component: {fileID: 1304753253}
   - component: {fileID: 1304753257}
+  - component: {fileID: 1304753258}
   - component: {fileID: 1304753252}
   - component: {fileID: 1304753251}
   m_Layer: 0
@@ -653,9 +654,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7caca31ff3cecae4aaf3f8bbe2cfb89e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  motor: {fileID: 1304753258}
   selectableRadius: 30
   detectableRadius: 10
-  speed: 5
   lookAngle: 60
   pointsLayer:
     serializedVersion: 2
@@ -756,6 +757,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1304753258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304753250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23bd693598911ce4cb8dfc4068afd0c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
 --- !u!1 &1373945951
 GameObject:
   m_ObjectHideFlags: 0

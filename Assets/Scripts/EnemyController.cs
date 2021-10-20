@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-
+    [SerializeField]
+    RobotMotor motor;
     Vector3 targetPosition;
     bool detectedPlayer;
-    public float selectableRadius, detectableRadius, speed, lookAngle;
+    public float selectableRadius, detectableRadius, lookAngle;
     public LayerMask pointsLayer, playerLayer;
     public Recorder recorder;
     List<string> priorities;
@@ -76,7 +77,7 @@ public class EnemyController : MonoBehaviour
     {
         if (transform.position != targetPosition && !detectedPlayer)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
+            motor.Move(targetPosition);
             return NodeState.RUNNING;
         }
         else if(transform.position == targetPosition)
