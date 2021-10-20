@@ -8,6 +8,7 @@ TagManager:
   - Closet
   - Under
   - Normal
+  - Robot
   layers:
   - Default
   - TransparentFX

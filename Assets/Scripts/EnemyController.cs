@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -11,7 +12,7 @@ public class EnemyController : MonoBehaviour
     public LayerMask pointsLayer, playerLayer;
     public Recorder recorder;
     List<string> priorities;
-    List<Vector3> points = new List<Vector3>();
+    List<PointControl> points = new List<PointControl>();
     int priorityIndex = -1;
 
     void Start()
@@ -20,29 +21,36 @@ public class EnemyController : MonoBehaviour
         priorities = recorder.GetPriorities();
     }
     
-    void Update()
-    {
-    }
-
     public NodeState SelectPoint()
     {
         if (transform.position == targetPosition && !detectedPlayer)
         {
-            while (points.Count == 0 && priorityIndex<priorities.Count)
+            if (points.Count == 0 && priorityIndex+1 < priorities.Count)
             {
                 priorityIndex++;
-                var hits = Physics.SphereCastAll(transform.position, selectableRadius, transform.forward, selectableRadius, pointsLayer.value, QueryTriggerInteraction.Collide);
-                foreach (var h in hits)
-                {
-                    if (h.collider.tag == priorities[priorityIndex])
-                        points.Add(h.collider.transform.position);
-                }
+            }
+
+            //If point is reached and no player has been found, go to random unvisited point with said tag
+            var hits = Physics.SphereCastAll(transform.position, selectableRadius, transform.forward, selectableRadius, pointsLayer.value, QueryTriggerInteraction.Collide);
+            points.Clear();
+            foreach (var h in hits)
+            {
+                if (h.collider.tag == priorities[priorityIndex] && h.collider.GetComponent<PointControl>().visited == false)
+                    points.Add(h.collider.GetComponent<PointControl>());
             }
 
             //for now it's just going in circles randomly but later it needs to differentiate
             //between visited points and those left unchecked
-            targetPosition = points[(int)Random.Range(0, points.Count)];
+
+            if (points.Count > 0)
+            {
+                int index = (int)Random.Range(0, points.Count);
+                targetPosition = points[index].location;
+                points.RemoveAt(index);
+            }
         }
+
+
 
         return NodeState.SUCCESS;
 
