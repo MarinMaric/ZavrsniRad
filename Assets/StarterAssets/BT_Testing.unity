@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 44857629}
   - component: {fileID: 44857630}
+  - component: {fileID: 44857628}
   m_Layer: 0
   m_Name: GameRecorder
   m_TagString: Untagged
@@ -140,6 +141,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &44857628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44857627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9579e427aa094d41bc6745c7d5d797b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfRows: 5
+  fieldWidth: 2
+  fieldPadding: 0.2
+  fieldsPerRow: 5
+  bottomLeft: {x: 0, y: 0, z: 0}
+  gridCenter: {x: 0, y: 0, z: 0}
 --- !u!4 &44857629
 Transform:
   m_ObjectHideFlags: 0
@@ -148,7 +167,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44857627}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5028206, y: -0.66930294, z: 6.954073}
+  m_LocalPosition: {x: 24.3, y: 4.75, z: 0.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -258,7 +277,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 284883025}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.2095697, y: 4.19, z: -3.3433518}
+  m_LocalPosition: {x: 10.52, y: 4.19, z: -3.82}
   m_LocalScale: {x: 20, y: 1, z: 30}
   m_Children: []
   m_Father: {fileID: 0}
