@@ -11,10 +11,21 @@ public class GridGenerator : MonoBehaviour
     Vector3 bottomLeft, gridCenter;
     Vector3 gridSize;
     public Transform dummyWorld;
+    public LayerMask obstacleMask;
+    public List<Field> path;
 
     private void Start()
     {
-        GenerateGrid();
+        //GenerateGrid();
+        //Field field = PositionToField(transform.position);
+        //List<Field> neighbours=GetNeighbors(field);
+
+        //Debug.Log("Center field is: " + field.row + ", " + field.column);
+
+        //foreach(Field n in neighbours)
+        //{
+        //    Debug.Log("Neighbour " + n + ": "  + n.row + ", " + n.column);
+        //}
     }
 
     public void GenerateGrid()
@@ -32,31 +43,20 @@ public class GridGenerator : MonoBehaviour
         {
             //Set up row
             grid.gridRows.Add(new GridRow());
-            grid.gridRows[i].fields = new List<Vector3>();
+            grid.gridRows[i].fields = new List<Field>();
 
             for (int j = 0; j < fieldsPerRow; j++)
             {
                 //crate individual field
-                Vector3 field = gridCenter - new Vector3((fieldsPerRow/2)*fieldWidth, 0, (numberOfRows/2)*fieldWidth) + new Vector3(j*(fieldWidth+fieldPadding), 0, i*(fieldWidth+fieldPadding));
+                Vector3 position = gridCenter - new Vector3((fieldsPerRow / 2) * fieldWidth, 0, (numberOfRows / 2) * fieldWidth) + new Vector3(j * (fieldWidth + fieldPadding), 0, i * (fieldWidth + fieldPadding));
+                bool traversible = Physics.CheckBox(position, Vector3.one * fieldWidth / 2, Quaternion.identity, obstacleMask, QueryTriggerInteraction.Ignore)?false:true;
+                Field field = new Field(position, traversible, i, j); 
                 grid.gridRows[i].fields.Add(field);    
             }
         }
     }
 
-    public Vector3 FromWorldPointToField(Vector3 worldPosition)
-    {
-        float gridWorldSizeX = fieldsPerRow * fieldWidth;
-        float gridWorldSizeZ = numberOfRows * fieldWidth;
-        float percentX = (worldPosition.x + gridWorldSizeX / 2) / gridWorldSizeX;
-        float percentY = (worldPosition.z + gridWorldSizeZ / 2) / gridWorldSizeZ;
-        percentX = Mathf.Clamp01(percentX);
-        percentY = Mathf.Clamp01(percentY);
-
-        int x = Mathf.RoundToInt((fieldsPerRow - 1) * percentX);
-        int z = Mathf.RoundToInt((numberOfRows - 1) * percentY);
-        return grid.gridRows[z].fields[x];
-    }
-    public Vector3 FromWorldPointCustom(Vector3 worldPosition)
+    public Field PositionToField(Vector3 worldPosition)
     {
         //limit change of field for even coordinates 
         if(worldPosition.x%2!=0 && worldPosition.y % 2 != 0)
@@ -73,21 +73,49 @@ public class GridGenerator : MonoBehaviour
         return grid.gridRows[(int)targetField.z].fields[(int)targetField.x];
     }
 
+    public List<Field> GetNeighbors(Field field)
+    {
+        List<Field> neighbors = new List<Field>();
+
+        for (int r = -1; r <= 1; r++)
+        {
+            for (int c = -1; c <= 1; c++)
+            {
+                if (r == 0 && c == 0)
+                    continue;
+
+                int row = field.row + r;
+                int column = field.column + c;
+
+                if (row >= 0 && row < numberOfRows && column >= 0 && column < fieldsPerRow)
+                {
+                    neighbors.Add(grid.gridRows[row].fields[column]);
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
     private void OnDrawGizmos()
     {
         if (grid != null)
         {
-            Vector3 dummyPos = FromWorldPointCustom(dummyWorld.position);
+            Field dummyField = PositionToField(dummyWorld.position);
             for (int i = 0; i < numberOfRows; i++)
             {
                 for (int j = 0; j < fieldsPerRow; j++)
                 {
-                    if (grid.gridRows[i].fields[j] == dummyPos)
+                    if (grid.gridRows[i].fields[j] == dummyField || !grid.gridRows[i].fields[j].traversible)
                         Gizmos.color = Color.red;
-                    else
+                    else 
                         Gizmos.color = Color.white;
 
-                    Gizmos.DrawCube(grid.gridRows[i].fields[j], Vector3.one * fieldWidth);
+                    if (path != null)
+                        if (path.Contains(grid.gridRows[i].fields[j]))
+                            Gizmos.color = Color.black;
+
+                    Gizmos.DrawCube(grid.gridRows[i].fields[j].position, Vector3.one * fieldWidth);
                 }
             }
 
@@ -101,7 +129,7 @@ public class GridGenerator : MonoBehaviour
     }
     class GridRow
     {
-        public List<Vector3> fields;
+        public List<Field> fields;
     }
     #endregion
 }
