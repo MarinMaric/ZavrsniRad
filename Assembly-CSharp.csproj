@@ -66,17 +66,18 @@
     <Compile Include="Assets\Scripts\SelectorNode.cs" />
     <Compile Include="Assets\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
     <Compile Include="Assets\Scripts\PointControl.cs" />
+    <Compile Include="Assets\Scripts\Pathfinder.cs" />
     <Compile Include="Assets\Scripts\DecoratorNode.cs" />
     <Compile Include="Assets\Scripts\BehaviorTree.cs" />
     <Compile Include="Assets\Scripts\RobotMotor.cs" />
     <Compile Include="Assets\Prefabs\PlayerTriggers.cs" />
     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualJoystick.cs" />
     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
+    <Compile Include="Assets\Scripts\Field.cs" />
     <Compile Include="Assets\Scripts\ActionNode.cs" />
     <Compile Include="Assets\StarterAssets\FirstPersonController\Scripts\BasicRigidBodyPush.cs" />
     <Compile Include="Assets\StarterAssets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\Scripts\Pathfinder.cs" />
-    <Compile Include="Assets\Scripts\Field.cs" />
+    <Compile Include="Assets\Scripts\GridChanger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\StarterAssets\Environment\Shaders\Built-in_RP\Triplanar.shader" />

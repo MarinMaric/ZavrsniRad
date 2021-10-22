@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
     Vector3 targetPosition;
     bool detectedPlayer;
     public float selectableRadius, detectableRadius, lookAngle;
-    public LayerMask pointsLayer, playerLayer;
+    public LayerMask pointsLayer, playerLayer, obstacleLayer;
     public Recorder recorder;
     List<string> priorities;
     List<PointControl> points = new List<PointControl>();
@@ -100,7 +100,8 @@ public class EnemyController : MonoBehaviour
             float targetAngle = Vector3.Angle(transform.forward, direction);
             if (targetAngle < lookAngle / 2)
             {
-                detectedPlayer = true;
+                if(!Physics.Raycast(transform.position, hit.transform.position, detectableRadius, obstacleLayer))
+                    detectedPlayer = true;
             }
         }
         

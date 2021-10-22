@@ -14,23 +14,25 @@ public class Pathfinder : MonoBehaviour
     List<Field> path;
     List<Vector3> waypoints;
 
+    Field startField, endField;
+
+    public Transform robot;
+
     private void Start()
     {
-        gridControl.GenerateGrid();
-        FindPath(transform.position, gridControl.dummyWorld.position);
+        FindPath(robot.position, gridControl.targetWorld.position);
         waypoints = ReduceToWaypoints(path);
 
         gridControl.path = path;
-
-        for (int i = 0; i < waypoints.Count; i++)
-        {
-            Debug.Log(waypoints[i]);
-        }
     }
 
     private void Update()
     {
-
+        if (gridControl.TargetField.position != endField.position)
+        {
+            FindPath(robot.position, gridControl.targetWorld.position);
+            gridControl.path = path;
+        }
     }
 
     public void FindPath(Vector3 start, Vector3 end)
@@ -39,8 +41,8 @@ public class Pathfinder : MonoBehaviour
         closed = new List<Field>();
 
         gridControl.GenerateGrid();
-        Field startField = gridControl.PositionToField(start);
-        Field endField = gridControl.PositionToField(end);
+        startField = gridControl.PositionToField(start);
+        endField = gridControl.PositionToField(end);
 
         //add the starting field to open
         open.Add(startField);

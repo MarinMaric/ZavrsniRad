@@ -10,12 +10,30 @@ public class GridGenerator : MonoBehaviour
     public int fieldsPerRow;
     Vector3 bottomLeft, gridCenter;
     Vector3 gridSize;
-    public Transform dummyWorld;
+    Transform spawnPoint;
+    [SerializeField]
+    List<Transform> spawnPoints;
+    [SerializeField]
+    List<GridChanger> changeTriggers;
+    public Transform targetWorld;
     public LayerMask obstacleMask;
     public List<Field> path;
 
+    public Field TargetField { 
+        get {
+            return PositionToField(targetWorld.position);
+        } 
+    }
+
     private void Start()
     {
+        foreach(var t in changeTriggers)
+        {
+            t.changeEvent += ChangeSpawnPoint;
+        }
+
+        spawnPoint = spawnPoints[0].transform;
+
         //GenerateGrid();
         //Field field = PositionToField(transform.position);
         //List<Field> neighbours=GetNeighbors(field);
@@ -33,7 +51,7 @@ public class GridGenerator : MonoBehaviour
         float gridSizeZ = numberOfRows * fieldWidth;
         float gridSizeX = fieldsPerRow * fieldWidth;
         gridSize = new Vector3(gridSizeX, 0, gridSizeZ);
-        gridCenter = transform.position;
+        gridCenter = spawnPoint.position;
         bottomLeft = gridCenter - new Vector3(gridSizeX, 0, gridSizeZ);
       
         grid = new Grid();
@@ -97,16 +115,21 @@ public class GridGenerator : MonoBehaviour
         return neighbors;
     }
 
+    void ChangeSpawnPoint(int index)
+    {
+        spawnPoint = spawnPoints[index].transform;
+    }
+
     private void OnDrawGizmos()
     {
         if (grid != null)
         {
-            Field dummyField = PositionToField(dummyWorld.position);
+            Field targetField = PositionToField(targetWorld.position);
             for (int i = 0; i < numberOfRows; i++)
             {
                 for (int j = 0; j < fieldsPerRow; j++)
                 {
-                    if (grid.gridRows[i].fields[j] == dummyField || !grid.gridRows[i].fields[j].traversible)
+                    if (grid.gridRows[i].fields[j] == targetField || !grid.gridRows[i].fields[j].traversible)
                         Gizmos.color = Color.red;
                     else 
                         Gizmos.color = Color.white;
