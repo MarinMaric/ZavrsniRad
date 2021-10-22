@@ -11,16 +11,26 @@ public class Pathfinder : MonoBehaviour
     List<Field> open;
     List<Field> closed;
 
-    List<Field> Path;
+    List<Field> path;
+    List<Vector3> waypoints;
 
     private void Start()
     {
         gridControl.GenerateGrid();
+        FindPath(transform.position, gridControl.dummyWorld.position);
+        waypoints = ReduceToWaypoints(path);
+
+        gridControl.path = path;
+
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            Debug.Log(waypoints[i]);
+        }
     }
 
     private void Update()
     {
-        FindPath(transform.position, gridControl.dummyWorld.position);
+
     }
 
     public void FindPath(Vector3 start, Vector3 end)
@@ -50,7 +60,7 @@ public class Pathfinder : MonoBehaviour
 
             if (current == endField)
             {
-                gridControl.path = RetracePath(startField, endField);
+                path = RetracePath(startField, endField);
                 return;
             }
 
@@ -107,5 +117,25 @@ public class Pathfinder : MonoBehaviour
         path.Reverse();
 
         return path;
+    }
+
+    List<Vector3> ReduceToWaypoints(List<Field> Path)
+    {
+        List<Vector3> waypoints = new List<Vector3>();
+        Vector2 currentDir = Vector2.zero;
+
+        for (int i = 1; i < Path.Count; i++)
+        {
+            Vector2 newDir = new Vector2(Path[i - 1].column - Path[i].column, Path[i - 1].row - Path[i].row);
+            
+            if (currentDir!=newDir)
+            {
+                waypoints.Add(Path[i].position);
+            }
+
+            currentDir = newDir;
+        }
+
+        return waypoints;
     }
 }
