@@ -7,7 +7,8 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField]
     RobotMotor motor;
-    Vector3 targetPosition;
+    [HideInInspector]
+    public Transform targetPosition;
     bool detectedPlayer;
     public float selectableRadius, detectableRadius, lookAngle;
     public LayerMask pointsLayer, playerLayer, obstacleLayer;
@@ -16,15 +17,18 @@ public class EnemyController : MonoBehaviour
     List<PointControl> points = new List<PointControl>();
     int priorityIndex = -1;
 
+    public delegate void ResetPath();
+    public event ResetPath resetPathEvent;
+
     void Start()
     {
-        targetPosition = transform.position;
+        targetPosition = transform;
         priorities = recorder.GetPriorities();
     }
     
     public NodeState SelectPoint()
     {
-        if (transform.position == targetPosition && !detectedPlayer)
+        if (transform.position == targetPosition.position && !detectedPlayer)
         {
             if (points.Count == 0 && priorityIndex+1 < priorities.Count)
             {
@@ -46,41 +50,24 @@ public class EnemyController : MonoBehaviour
             if (points.Count > 0)
             {
                 int index = (int)Random.Range(0, points.Count);
-                targetPosition = points[index].location;
+                targetPosition = points[index].transform;
+                Debug.Log(targetPosition.name);
                 points.RemoveAt(index);
+                resetPathEvent.Invoke();
             }
         }
 
-
-
         return NodeState.SUCCESS;
-
-        #region oldcode
-        /*if (transform.position==targetPosition && !detectedPlayer)
-        {
-            //Select random point from the ones nearby in a selectable radius
-            List<Vector3> points = new List<Vector3>();
-            var hits = Physics.SphereCastAll(transform.position, selectableRadius, transform.forward, selectableRadius, pointsLayer.value, QueryTriggerInteraction.Collide);
-            foreach (var h in hits)
-            {
-                points.Add(h.transform.position);
-            }
-
-            targetPosition = points[(int)Random.Range(0, points.Count)];
-        
-        }   
-        */
-        #endregion
     }
 
     public NodeState MoveToPoint()
     {
-        if (transform.position != targetPosition && !detectedPlayer)
+        if (transform.position != motor.targetPosition && !detectedPlayer)
         {
-            motor.Move(targetPosition);
+            motor.Move();
             return NodeState.RUNNING;
         }
-        else if(transform.position == targetPosition)
+        else if(transform.position == targetPosition.position)
         {
             return NodeState.SUCCESS;
         }
@@ -111,9 +98,10 @@ public class EnemyController : MonoBehaviour
             return NodeState.FAILURE;
     }
 
-    public NodeState PrintMessage()
+    public NodeState ChasePlayer()
     {
-        Debug.Log("Printed message");
+        
+
         return NodeState.SUCCESS;
     }
 

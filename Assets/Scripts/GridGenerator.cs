@@ -33,17 +33,6 @@ public class GridGenerator : MonoBehaviour
         }
 
         spawnPoint = spawnPoints[0].transform;
-
-        //GenerateGrid();
-        //Field field = PositionToField(transform.position);
-        //List<Field> neighbours=GetNeighbors(field);
-
-        //Debug.Log("Center field is: " + field.row + ", " + field.column);
-
-        //foreach(Field n in neighbours)
-        //{
-        //    Debug.Log("Neighbour " + n + ": "  + n.row + ", " + n.column);
-        //}
     }
 
     public void GenerateGrid()
@@ -118,6 +107,11 @@ public class GridGenerator : MonoBehaviour
     void ChangeSpawnPoint(int index)
     {
         spawnPoint = spawnPoints[index].transform;
+    }
+
+    public bool CheckGrid()
+    {
+        return grid != null;
     }
 
     private void OnDrawGizmos()

@@ -17,21 +17,22 @@ public class Pathfinder : MonoBehaviour
     Field startField, endField;
 
     public Transform robot;
+    RobotMotor robotMotor;
 
     private void Start()
     {
-        FindPath(robot.position, gridControl.targetWorld.position);
-        waypoints = ReduceToWaypoints(path);
-
-        gridControl.path = path;
+        robotMotor = robot.GetComponent<RobotMotor>();
+        robot.GetComponent<EnemyController>().resetPathEvent += SetPath;
     }
 
     private void Update()
     {
-        if (gridControl.TargetField.position != endField.position)
+        if (gridControl.targetWorld!=null)
         {
-            FindPath(robot.position, gridControl.targetWorld.position);
-            gridControl.path = path;
+            if (gridControl.TargetField.position != endField.position)
+            {
+                SetPath();
+            }
         }
     }
 
@@ -124,20 +125,35 @@ public class Pathfinder : MonoBehaviour
     List<Vector3> ReduceToWaypoints(List<Field> Path)
     {
         List<Vector3> waypoints = new List<Vector3>();
-        Vector2 currentDir = Vector2.zero;
+        //Vector2 currentDir = Vector2.zero;
 
-        for (int i = 1; i < Path.Count; i++)
-        {
-            Vector2 newDir = new Vector2(Path[i - 1].column - Path[i].column, Path[i - 1].row - Path[i].row);
+        //for (int i = 1; i < Path.Count; i++)
+        //{
+        //    Vector2 newDir = new Vector2(Path[i - 1].column - Path[i].column, Path[i - 1].row - Path[i].row);
             
-            if (currentDir!=newDir)
-            {
-                waypoints.Add(Path[i].position);
-            }
+        //    if (currentDir!=newDir)
+        //    {
+        //        waypoints.Add(Path[i].position);
+        //    }
 
-            currentDir = newDir;
+        //    currentDir = newDir;
+        //}
+
+        foreach(var i in Path)
+        {
+            waypoints.Add(i.position);
         }
 
         return waypoints;
+    }
+
+    void SetPath()
+    {
+        gridControl.targetWorld = robot.GetComponent<EnemyController>().targetPosition;
+        FindPath(robot.position, gridControl.targetWorld.position);
+        waypoints = ReduceToWaypoints(path);
+        robotMotor.ChangeWaypoints(waypoints);
+
+        gridControl.path = path;
     }
 }
