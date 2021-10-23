@@ -15,15 +15,22 @@ public class GridChanger : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            if (FindObjectOfType<EnemyController>().detectedPlayer != true)
+                return;
+        }
+        if (other.tag=="Robot")
+        {
             if (!passed)
             {
                 changeEvent(index);
                 passed = true;
+                FindObjectOfType<EnemyController>().activeRoom++;
             }
             else
             {
                 changeEvent(index - 1);
                 passed = false;
+                FindObjectOfType<EnemyController>().activeRoom--;
             }
         }
     }

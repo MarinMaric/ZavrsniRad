@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PointControl : MonoBehaviour
 {
+    [HideInInspector]
     public Vector3 location;
     public bool visited;
+    public int roomId;
 
     private void Awake()
     {

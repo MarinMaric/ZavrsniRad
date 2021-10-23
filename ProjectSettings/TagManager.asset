@@ -9,6 +9,7 @@ TagManager:
   - Under
   - Normal
   - Robot
+  - Exit
   layers:
   - Default
   - TransparentFX

@@ -9,22 +9,27 @@ public class EnemyController : MonoBehaviour
     RobotMotor motor;
     [HideInInspector]
     public Transform targetPosition;
-    bool detectedPlayer;
+    [HideInInspector]
+    public bool detectedPlayer, beganChasing;
     public float selectableRadius, detectableRadius, lookAngle;
     public LayerMask pointsLayer, playerLayer, obstacleLayer;
     public Recorder recorder;
     List<string> priorities;
     List<PointControl> points = new List<PointControl>();
     int priorityIndex = -1;
+    public int activeRoom = 1;
 
     public delegate void ResetPath();
     public event ResetPath resetPathEvent;
+    List<int> checkedRooms;
 
     void Start()
     {
         targetPosition = transform;
         motor.targetPosition = transform.position;
         priorities = recorder.GetPriorities();
+
+        checkedRooms = new List<int>();
     }
     
     public NodeState SelectPoint()
@@ -41,7 +46,7 @@ public class EnemyController : MonoBehaviour
             points.Clear();
             foreach (var h in hits)
             {
-                if (h.collider.tag == priorities[priorityIndex] && h.collider.GetComponent<PointControl>().visited == false)
+                if (h.collider.tag == priorities[priorityIndex] && h.collider.GetComponent<PointControl>().visited == false && h.collider.GetComponent<PointControl>().roomId==activeRoom)
                     points.Add(h.collider.GetComponent<PointControl>());
             }
 
@@ -56,21 +61,29 @@ public class EnemyController : MonoBehaviour
                     index = (int)Random.Range(0, points.Count);
                 }
                 targetPosition = points[index].transform;
-                Debug.Log(targetPosition.name);
                 points.RemoveAt(index);
                 resetPathEvent.Invoke();
             }
             else
             {
-                //if all nearby points are checked and none other can be found, mark all as unvisited
-                //and start again
+                //if all the points in the room have been checked then mark the whole room as checked
+                checkedRooms.Add(activeRoom);
+
+                //prepare priority for next room
                 priorityIndex = 0;
 
+                //move on to next room (later I can make it go back as well)
                 foreach (var h in hits)
                 {
                     h.collider.GetComponent<PointControl>().visited = false;
-                    if (h.collider.tag == priorities[priorityIndex] && h.collider.GetComponent<PointControl>().visited == false)
+                    if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId==activeRoom && h.collider.GetComponent<PointControl>().visited == false)
                         points.Add(h.collider.GetComponent<PointControl>());
+                }
+
+                if (points.Count > 0)
+                {
+                    targetPosition = points[0].transform;
+                    resetPathEvent.Invoke();
                 }
             }
         }
@@ -118,9 +131,16 @@ public class EnemyController : MonoBehaviour
 
     public NodeState ChasePlayer()
     {
-        
+        if (!beganChasing)
+        {
+            beganChasing = true;
 
-        return NodeState.SUCCESS;
+            targetPosition = GameObject.FindGameObjectWithTag("Player").transform;
+            motor.targetPosition = targetPosition.position;
+            resetPathEvent.Invoke();
+        }
+
+        return NodeState.RUNNING;
     }
 
     private void OnDrawGizmos()
