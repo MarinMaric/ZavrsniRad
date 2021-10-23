@@ -23,12 +23,13 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         targetPosition = transform;
+        motor.targetPosition = transform.position;
         priorities = recorder.GetPriorities();
     }
     
     public NodeState SelectPoint()
     {
-        if (transform.position == targetPosition.position && !detectedPlayer)
+        if (transform.position == motor.targetPosition && !detectedPlayer)
         {
             if (points.Count == 0 && priorityIndex+1 < priorities.Count)
             {
@@ -49,11 +50,28 @@ public class EnemyController : MonoBehaviour
 
             if (points.Count > 0)
             {
-                int index = (int)Random.Range(0, points.Count);
+                int index= (int)Random.Range(0, points.Count); 
+                while (points[index].transform == targetPosition)
+                {
+                    index = (int)Random.Range(0, points.Count);
+                }
                 targetPosition = points[index].transform;
                 Debug.Log(targetPosition.name);
                 points.RemoveAt(index);
                 resetPathEvent.Invoke();
+            }
+            else
+            {
+                //if all nearby points are checked and none other can be found, mark all as unvisited
+                //and start again
+                priorityIndex = 0;
+
+                foreach (var h in hits)
+                {
+                    h.collider.GetComponent<PointControl>().visited = false;
+                    if (h.collider.tag == priorities[priorityIndex] && h.collider.GetComponent<PointControl>().visited == false)
+                        points.Add(h.collider.GetComponent<PointControl>());
+                }
             }
         }
 
@@ -67,7 +85,7 @@ public class EnemyController : MonoBehaviour
             motor.Move();
             return NodeState.RUNNING;
         }
-        else if(transform.position == targetPosition.position)
+        else if(transform.position == motor.targetPosition)
         {
             return NodeState.SUCCESS;
         }
