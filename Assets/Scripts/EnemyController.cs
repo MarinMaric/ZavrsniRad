@@ -93,6 +93,9 @@ public class EnemyController : MonoBehaviour
 
     public NodeState MoveToPoint()
     {
+        if (beganChasing)
+            return NodeState.SUCCESS;
+
         if (transform.position != motor.targetPosition && !detectedPlayer)
         {
             motor.Move();
@@ -140,7 +143,15 @@ public class EnemyController : MonoBehaviour
             resetPathEvent.Invoke();
         }
 
-        return NodeState.RUNNING;
+        if (transform.position != motor.targetPosition)
+        {
+            motor.Move();
+            return NodeState.RUNNING;
+        }
+        else
+        {
+            return NodeState.SUCCESS;
+        }
     }
 
     private void OnDrawGizmos()

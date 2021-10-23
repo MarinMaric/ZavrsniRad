@@ -107,6 +107,9 @@ public class GridGenerator : MonoBehaviour
     void ChangeSpawnPoint(int index)
     {
         spawnPoint = spawnPoints[index].transform;
+        var pointScript = spawnPoint.GetComponent<SpawnPoint>();
+        numberOfRows = pointScript.fieldsPerRow;
+        fieldsPerRow = pointScript.fieldsPerRow;
     }
 
     public bool CheckGrid()
