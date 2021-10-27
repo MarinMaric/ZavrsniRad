@@ -19,6 +19,14 @@ public class Pathfinder : MonoBehaviour
     public Transform robot;
     RobotMotor robotMotor;
 
+    public float fieldWidth
+    {
+        get
+        {
+            return gridControl.fieldWidth;
+        }
+    }
+
     private void Start()
     {
         robotMotor = robot.GetComponent<RobotMotor>();
@@ -29,7 +37,7 @@ public class Pathfinder : MonoBehaviour
     {
         if (gridControl.targetWorld!=null)
         {
-            if (gridControl.TargetField.position != endField.position)
+            if (gridControl.TargetField != null && gridControl.TargetField.position != endField.position)
             {
                 SetPath();
             }

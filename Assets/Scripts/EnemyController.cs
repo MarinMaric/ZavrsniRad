@@ -21,6 +21,8 @@ public class EnemyController : MonoBehaviour
 
     public delegate void ResetPath();
     public event ResetPath resetPathEvent;
+    public delegate void LostPlayer();
+    public event LostPlayer lostPlayerEvent;
     List<int> checkedRooms;
 
     void Start()
@@ -37,6 +39,9 @@ public class EnemyController : MonoBehaviour
         if (transform.position == motor.targetPosition && !detectedPlayer)
         {
             if (points.Count == 0 && priorityIndex+1 < priorities.Count)
+            {
+                priorityIndex++;
+            }else if (priorityIndex == -1)
             {
                 priorityIndex++;
             }
@@ -70,12 +75,12 @@ public class EnemyController : MonoBehaviour
                 checkedRooms.Add(activeRoom);
 
                 //prepare priority for next room
-                priorityIndex = 0;
+                priorityIndex = -1;
 
                 //move on to next room (later I can make it go back as well)
                 foreach (var h in hits)
                 {
-                    h.collider.GetComponent<PointControl>().visited = false;
+                    //h.collider.GetComponent<PointControl>().visited = false;
                     if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId==activeRoom && h.collider.GetComponent<PointControl>().visited == false)
                         points.Add(h.collider.GetComponent<PointControl>());
                 }
@@ -113,16 +118,28 @@ public class EnemyController : MonoBehaviour
 
     public NodeState CheckForPlayer()
     {
+        //if (beganChasing)
+        //    return NodeState.SUCCESS;
+
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectableRadius, transform.forward, 0, playerLayer.value, QueryTriggerInteraction.Collide);
 
         foreach(RaycastHit hit in hits)
         {
             Vector3 direction = (hit.transform.position - transform.position).normalized;
             float targetAngle = Vector3.Angle(transform.forward, direction);
+            Debug.DrawRay(transform.position, direction, Color.red);
             if (targetAngle < lookAngle / 2)
             {
-                if(!Physics.Raycast(transform.position, hit.transform.position, detectableRadius, obstacleLayer))
-                    detectedPlayer = true;
+                RaycastHit checkObstacle;
+                Ray ray = new Ray(transform.position, direction);
+                if (Physics.Raycast(ray, out checkObstacle, detectableRadius, ~pointsLayer, QueryTriggerInteraction.Ignore))
+                {
+                    //Debug.Log(checkObstacle.collider.tag);
+                    if (checkObstacle.collider.tag == "Player")
+                    {
+                        detectedPlayer = true;
+                    }
+                }
             }
         }
         
@@ -145,13 +162,30 @@ public class EnemyController : MonoBehaviour
 
         if (transform.position != motor.targetPosition)
         {
+            Debug.DrawRay(transform.position, transform.forward, Color.red);
             motor.Move();
             return NodeState.RUNNING;
         }
-        else
+        else if(Physics.CheckSphere(transform.position, FindObjectOfType<Pathfinder>().fieldWidth, playerLayer, QueryTriggerInteraction.Ignore))
         {
+            Debug.Log("Caught player");
             return NodeState.SUCCESS;
         }
+        else //Ako je robot na lokaciji koja je zabilježena kao meta a igra? se ne nalazi na njoj prebaci u potragu
+        {
+            Debug.Log("Player escaped");
+
+            detectedPlayer = false;
+            beganChasing = false;
+
+            lostPlayerEvent.Invoke();
+            return NodeState.FAILURE;
+        }
+    }
+
+    public NodeState AttackPlayer()
+    {
+        return NodeState.FAILURE;
     }
 
     private void OnDrawGizmos()

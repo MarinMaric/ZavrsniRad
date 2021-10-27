@@ -44,7 +44,8 @@ public class BehaviorTree : MonoBehaviour
             new ActionNode(controller.SelectPoint),
             new ActionNode(controller.MoveToPoint),
             new ActionNode(controller.CheckForPlayer),
-            new ActionNode(controller.ChasePlayer)
+            new ActionNode(controller.ChasePlayer),
+            new ActionNode(controller.AttackPlayer)
         }; 
 
         root = new SequenceNode(childNodes);

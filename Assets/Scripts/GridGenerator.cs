@@ -33,6 +33,8 @@ public class GridGenerator : MonoBehaviour
         }
 
         spawnPoint = spawnPoints[0].transform;
+        numberOfRows = spawnPoint.GetComponent<SpawnPoint>().numberOfRows;
+        fieldsPerRow = spawnPoint.GetComponent<SpawnPoint>().fieldsPerRow;
     }
 
     public void GenerateGrid()
@@ -77,7 +79,21 @@ public class GridGenerator : MonoBehaviour
         Vector3 distanceGrid = distanceWorld / fieldWidth;
         Vector3 targetField = centerIndex + distanceGrid;
 
-        return grid.gridRows[(int)targetField.z].fields[(int)targetField.x];
+        if (targetWorld.tag == "Player")
+        {
+            if ((targetField.z >= 0 && targetField.z < numberOfRows) && (targetField.x >= 0 && targetField.x < fieldsPerRow))
+                return grid.gridRows[(int)targetField.z].fields[(int)targetField.x];
+            else return null;
+        }
+
+        return grid.gridRows[(int)Mathf.Clamp(targetField.z, 0, numberOfRows - 1)].fields[(int)Mathf.Clamp(targetField.x, 0, fieldsPerRow - 1)];
+
+        //if (fieldsPerRow == 20)
+        //    Debug.Log(targetWorld.name);
+
+        //if ((targetField.z>=0 && targetField.z < numberOfRows) && (targetField.x>=0 && targetField.x < fieldsPerRow))
+        //    return grid.gridRows[(int)targetField.z].fields[(int)targetField.x];
+        //else return null;
     }
 
     public List<Field> GetNeighbors(Field field)
@@ -108,8 +124,15 @@ public class GridGenerator : MonoBehaviour
     {
         spawnPoint = spawnPoints[index].transform;
         var pointScript = spawnPoint.GetComponent<SpawnPoint>();
-        numberOfRows = pointScript.fieldsPerRow;
+        numberOfRows = pointScript.numberOfRows;
         fieldsPerRow = pointScript.fieldsPerRow;
+        targetWorld = null;
+
+        var exitPoints = GameObject.FindGameObjectsWithTag("Exit");
+        foreach (var p in exitPoints)
+        {
+            p.GetComponent<PointControl>().visited = false;
+        }
     }
 
     public bool CheckGrid()
@@ -121,24 +144,33 @@ public class GridGenerator : MonoBehaviour
     {
         if (grid != null)
         {
-            Field targetField = PositionToField(targetWorld.position);
-            for (int i = 0; i < numberOfRows; i++)
+            //Field targetField = PositionToField(targetWorld.position);
+            //for (int i = 0; i < numberOfRows; i++)
+            //{
+            //    for (int j = 0; j < fieldsPerRow; j++)
+            //    {
+            //        if (grid.gridRows[i].fields[j] == targetField || !grid.gridRows[i].fields[j].traversible)
+            //            Gizmos.color = Color.red;
+            //        else
+            //            Gizmos.color = Color.white;
+
+            //        if (path != null)
+            //            if (path.Contains(grid.gridRows[i].fields[j]))
+            //                Gizmos.color = Color.black;
+
+            //        Gizmos.DrawCube(grid.gridRows[i].fields[j].position, Vector3.one * fieldWidth);
+            //    }
+            //}
+
+            if (path != null)
             {
-                for (int j = 0; j < fieldsPerRow; j++)
+                Gizmos.color = Color.black;
+
+                foreach (var p in path)
                 {
-                    if (grid.gridRows[i].fields[j] == targetField || !grid.gridRows[i].fields[j].traversible)
-                        Gizmos.color = Color.red;
-                    else 
-                        Gizmos.color = Color.white;
-
-                    if (path != null)
-                        if (path.Contains(grid.gridRows[i].fields[j]))
-                            Gizmos.color = Color.black;
-
-                    Gizmos.DrawCube(grid.gridRows[i].fields[j].position, Vector3.one * fieldWidth);
+                    Gizmos.DrawCube(p.position, Vector3.one * fieldWidth);
                 }
             }
-
         }
     }
 

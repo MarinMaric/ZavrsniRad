@@ -32,6 +32,8 @@ public class GridChanger : MonoBehaviour
                 passed = false;
                 FindObjectOfType<EnemyController>().activeRoom--;
             }
+
+            //Debug.Log("Moved to: " + FindObjectOfType<EnemyController>().activeRoom);
         }
     }
 }

@@ -14,9 +14,34 @@ public class PointControl : MonoBehaviour
         location = transform.position;
     }
 
+    private void Start()
+    {
+        FindObjectOfType<EnemyController>().resetPathEvent += ResetPoint;
+        if(tag!="Exit")
+            FindObjectOfType<EnemyController>().lostPlayerEvent += ResetPoint;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Robot")
+        {
+            if (transform.tag == "Exit")
+            {
+                Debug.Log("Marked as visited");
+            }
             visited = true;
+        }
+    }
+
+    void ResetPoint()
+    {
+        if (roomId != FindObjectOfType<EnemyController>().activeRoom)
+        {
+            if (transform.tag == "Exit")
+            {
+                Debug.Log("Freed up");
+            }
+            visited = false;
+        }
     }
 }

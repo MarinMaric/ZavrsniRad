@@ -23,7 +23,6 @@ public class RobotMotor : MonoBehaviour
     {
         Rotate(currentWaypoint);
         transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, Time.deltaTime * moveSpeed);
-        Debug.Log(currentWaypoint);
     }
 
     public void Rotate(Vector3 targetPosition)
@@ -35,6 +34,9 @@ public class RobotMotor : MonoBehaviour
 
     public void ChangeWaypoints(List<Vector3> newWaypoints)
     {
+        if (newWaypoints.Count == 0)
+            return;
+
         waypoints = newWaypoints;
         index = 0;
         targetPosition = waypoints[waypoints.Count-1];
