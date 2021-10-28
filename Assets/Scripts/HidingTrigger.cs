@@ -14,7 +14,6 @@ public class HidingTrigger : MonoBehaviour
             FindObjectOfType<HidingController>().hidingSpot = hidingSpot;
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")

@@ -5,7 +5,7 @@ using UnityEngine;
 public class GridChanger : MonoBehaviour
 {
     public int index;
-    bool passed = false;
+    bool robotPassed = false, playerPassed = false;
 
     public delegate void ChangeSpawn(int i);
     public event ChangeSpawn changeEvent;
@@ -15,21 +15,20 @@ public class GridChanger : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            if (FindObjectOfType<EnemyController>().detectedPlayer != true)
-                return;
+            other.transform.parent.GetComponent<HidingController>().currentRoom += playerPassed ? -1 : 1;
         }
         if (other.tag=="Robot")
         {
-            if (!passed)
+            if (!robotPassed)
             {
                 changeEvent(index);
-                passed = true;
+                robotPassed = true;
                 FindObjectOfType<EnemyController>().activeRoom++;
             }
             else
             {
                 changeEvent(index - 1);
-                passed = false;
+                robotPassed = false;
                 FindObjectOfType<EnemyController>().activeRoom--;
             }
 

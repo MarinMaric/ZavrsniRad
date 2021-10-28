@@ -9,26 +9,45 @@ public class HidingController : MonoBehaviour
 {
     [SerializeField]
     CinemachineVirtualCamera freeLookCam, hidingCamera;
-    //[HideInInspector]    
+    [HideInInspector]
+    public Vector3 targetPosition, targetRotation;
+    [HideInInspector]
     public bool inRange, hiding;
     public int range;
     public LayerMask hidingMask;
     [HideInInspector]
     public string hidingSpot;
+    Transform spotTransform;
+    public bool sneaking, moving;
 
     public GameObject hideText, leaveText;
     PlayerTriggers playerTriggers;
+
+    public int currentRoom = 2;
+    bool alreadyFreed = false;
 
     private void OnEnable()
     {
         playerTriggers = new PlayerTriggers();
         playerTriggers.Enable();
         playerTriggers.DummyPlayer.HideTest.performed += ctx => Hide();
+     
+        playerTriggers.DummyPlayer.Sneak.started += ctx => Sneak(true);
+        playerTriggers.DummyPlayer.Sneak.canceled += ctx => Sneak(false);
+
+        playerTriggers.DummyPlayer.MoveDetector.started += ctx => Moving(true);
+        playerTriggers.DummyPlayer.MoveDetector.canceled += ctx => Moving(false);
     }
 
     private void OnDisable()
     {
         playerTriggers.DummyPlayer.HideTest.performed -= ctx => Hide();
+
+        playerTriggers.DummyPlayer.Sneak.started -= ctx => Sneak(true);
+        playerTriggers.DummyPlayer.Sneak.canceled -= ctx => Sneak(false);
+
+        playerTriggers.DummyPlayer.MoveDetector.started -= ctx => Moving(true);
+        playerTriggers.DummyPlayer.MoveDetector.canceled -= ctx => Moving(false);
     }
 
     void Update()
@@ -51,8 +70,12 @@ public class HidingController : MonoBehaviour
             var direction = freeLookCam.State.CorrectedOrientation * Vector3.forward;
 
             Debug.DrawRay(transform.position, direction, Color.red);
-            if (Physics.Raycast(freeLookCam.transform.position, direction, range, hidingMask, QueryTriggerInteraction.Ignore))
+
+            RaycastHit hitInfo;
+            if (Physics.Raycast(freeLookCam.transform.position, direction, out hitInfo, range , hidingMask, QueryTriggerInteraction.Ignore))
             {
+                spotTransform = hitInfo.transform;
+
                 if (!hideText.activeSelf)
                 {
                     hideText.SetActive(true);
@@ -81,15 +104,19 @@ public class HidingController : MonoBehaviour
         {
             hiding = false;
             leaveText.SetActive(false);
+            sneaking = true;
 
             TogglePlayer(true);
-
             Debug.Log("Player left the hiding spot");
+
+            StartCoroutine(KeepSafe());
         }
         else if (CheckAvailability())
         {
             TogglePlayer(false);
+            SetupCamera();
             hiding = true;
+            alreadyFreed = false;
             Debug.Log("Player hid himself");
         }
     }
@@ -100,5 +127,35 @@ public class HidingController : MonoBehaviour
         GetComponent<PlayerInput>().enabled = status;
         GetComponent<CharacterController>().enabled = status;
         hidingCamera.Priority = status?0:20;
+    }
+
+    void SetupCamera()
+    {
+        hidingCamera.transform.position = spotTransform.position;
+        hidingCamera.transform.rotation = Quaternion.LookRotation(spotTransform.forward);
+    }
+
+    void Sneak(bool toggle)
+    {
+        if (!alreadyFreed)
+            alreadyFreed = true;
+
+        sneaking = toggle;
+    }
+
+    void Moving(bool toggle)
+    {
+        moving = toggle;
+    }
+
+    IEnumerator KeepSafe()
+    {
+        yield return new WaitForSeconds(3);
+
+        if (!alreadyFreed)
+        {
+            sneaking = false;
+            alreadyFreed = true;
+        }
     }
 }
