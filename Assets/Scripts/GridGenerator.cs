@@ -144,33 +144,33 @@ public class GridGenerator : MonoBehaviour
     {
         if (grid != null)
         {
-            //Field targetField = PositionToField(targetWorld.position);
-            //for (int i = 0; i < numberOfRows; i++)
-            //{
-            //    for (int j = 0; j < fieldsPerRow; j++)
-            //    {
-            //        if (grid.gridRows[i].fields[j] == targetField || !grid.gridRows[i].fields[j].traversible)
-            //            Gizmos.color = Color.red;
-            //        else
-            //            Gizmos.color = Color.white;
-
-            //        if (path != null)
-            //            if (path.Contains(grid.gridRows[i].fields[j]))
-            //                Gizmos.color = Color.black;
-
-            //        Gizmos.DrawCube(grid.gridRows[i].fields[j].position, Vector3.one * fieldWidth);
-            //    }
-            //}
-
-            if (path != null)
+            Field targetField = PositionToField(targetWorld.position);
+            for (int i = 0; i < numberOfRows; i++)
             {
-                Gizmos.color = Color.black;
-
-                foreach (var p in path)
+                for (int j = 0; j < fieldsPerRow; j++)
                 {
-                    Gizmos.DrawCube(p.position, Vector3.one * fieldWidth);
+                    if (grid.gridRows[i].fields[j] == targetField || !grid.gridRows[i].fields[j].traversible)
+                        Gizmos.color = Color.red;
+                    else
+                        Gizmos.color = Color.white;
+
+                    if (path != null)
+                        if (path.Contains(grid.gridRows[i].fields[j]))
+                            Gizmos.color = Color.black;
+
+                    Gizmos.DrawCube(grid.gridRows[i].fields[j].position, Vector3.one * fieldWidth);
                 }
             }
+
+            //if (path != null)
+            //{
+            //    Gizmos.color = Color.black;
+
+            //    foreach (var p in path)
+            //    {
+            //        Gizmos.DrawCube(p.position, Vector3.one * fieldWidth);
+            //    }
+            //}
         }
     }
 

@@ -130,6 +130,10 @@ public class EnemyController : MonoBehaviour
             Debug.DrawRay(transform.position, direction, Color.red);
             if (targetAngle < lookAngle / 2)
             {
+                //Just in case the robot picks it up when it doesn't even have that priority
+                if(FindObjectOfType<HidingController>().hiding && !priorities.Contains(FindObjectOfType<HidingController>().hidingSpot))
+                    return NodeState.FAILURE;
+
                 RaycastHit checkObstacle;
                 Ray ray = new Ray(transform.position, direction);
                 if (Physics.Raycast(ray, out checkObstacle, detectableRadius, ~pointsLayer, QueryTriggerInteraction.Ignore))
@@ -151,6 +155,14 @@ public class EnemyController : MonoBehaviour
 
     public NodeState ChasePlayer()
     {
+        if (FindObjectOfType<HidingController>().hiding && !priorities.Contains(FindObjectOfType<HidingController>().hidingSpot))
+        {
+            beganChasing = false;
+            detectedPlayer = false;
+            resetPathEvent.Invoke();
+            return NodeState.FAILURE;
+        }
+
         if (!beganChasing)
         {
             beganChasing = true;

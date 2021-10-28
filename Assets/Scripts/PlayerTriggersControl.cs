@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class PlayerTriggersControl : MonoBehaviour
 {
-    public delegate void HideDelegate(string tag);
-    public event HideDelegate hideEvent;
     public PlayerTriggers triggers;
+    public LayerMask pointsLayer;
 
     private void Start()
     {
@@ -16,12 +15,9 @@ public class PlayerTriggersControl : MonoBehaviour
         triggers.DummyPlayer.HideTest.performed += ctx => Hide();
         triggers.DummyPlayer.HideTest.Enable();
     }
-
+   
     public void Hide()
     {
-        if (hideEvent != null)
-        {
-            hideEvent.Invoke("Vent");
-        }
+        
     }
 }

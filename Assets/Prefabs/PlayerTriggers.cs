@@ -31,7 +31,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d457a8c8-9c7c-4ad5-b0ff-4de993e1a034"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",

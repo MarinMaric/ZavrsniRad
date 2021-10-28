@@ -19,7 +19,7 @@ public class Recorder : MonoBehaviour
 
     private void Start()
     {
-        FindObjectOfType<PlayerTriggersControl>().hideEvent += IncreasePriority;
+        //FindObjectOfType<PlayerTriggersControl>().hideEvent += IncreasePriority;
     }
 
     public List<string> GetPriorities()
