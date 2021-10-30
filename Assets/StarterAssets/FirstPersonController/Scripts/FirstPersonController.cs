@@ -72,6 +72,7 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
+		CombatController combatController;
 
 		private void Awake()
 		{
@@ -90,6 +91,8 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+
+			combatController = GetComponent<CombatController>();
 		}
 
 		private void Update()
@@ -105,7 +108,7 @@ namespace StarterAssets
 		}
 
 		private void GroundedCheck()
-		{
+		{ 
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
@@ -173,9 +176,9 @@ namespace StarterAssets
 				inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
 			}
 
-			// move the player
-			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-		}
+            // move the player
+            _controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+        }
 
 		private void JumpAndGravity()
 		{

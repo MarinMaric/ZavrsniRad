@@ -81,6 +81,10 @@
     <Compile Include="Assets\StarterAssets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
     <Compile Include="Assets\Scripts\HidingTrigger.cs" />
+    <Compile Include="Assets\Scripts\CombatController.cs" />
+    <Compile Include="Assets\Scripts\ItemTrigger.cs" />
+    <Compile Include="Assets\Scripts\Item.cs" />
+    <Compile Include="Assets\Scripts\ItemGraphics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\StarterAssets\Environment\Shaders\Built-in_RP\Triplanar.shader" />

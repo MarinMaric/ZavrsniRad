@@ -188,6 +188,254 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Combat"",
+            ""id"": ""179e40f0-aa94-4b7c-ba06-6ed12edb27b6"",
+            ""actions"": [
+                {
+                    ""name"": ""Primary"",
+                    ""type"": ""Button"",
+                    ""id"": ""d88abae2-64c2-4c57-8f89-401ea3a71407"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Secondary"",
+                    ""type"": ""Button"",
+                    ""id"": ""2354bca9-6d58-4d2c-b085-cc659271fa19"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""PassivePrimary"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed13c52e-ba94-41ae-abc7-c2b032e19bc3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""PassiveSecondary"",
+                    ""type"": ""Button"",
+                    ""id"": ""9f962a9b-681e-4dc0-9acd-136430f9f6e7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Throwable"",
+                    ""type"": ""Button"",
+                    ""id"": ""27524062-cd47-4b60-98ec-5db252a116a3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""3ec88d32-476c-4787-a7c8-14ccce5b9a8e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Heal"",
+                    ""type"": ""Button"",
+                    ""id"": ""baa778fe-dbef-45cc-9dd0-7f9f101e155a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""PickUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""7807408e-893b-46a6-805a-61dec57eeeb4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""c081f53b-05c0-4276-9831-c7da3c0c75cf"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Primary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba4c83bc-cdb3-40ac-b40e-78ada9bdbb30"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Primary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7c3c67e-9456-4ac5-af1c-f78f92c3f3be"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Secondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5c2dd814-7b90-44ab-8fc6-cb9f0951f98a"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Secondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1dc96f67-aaf5-4497-95c6-35f2578a1a64"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""PassivePrimary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf5c40ad-1025-4ccc-a51d-1caa959c3041"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PassivePrimary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53ec016c-17c3-424d-b7c5-b30642c0e7f8"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""PassiveSecondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7173ba9d-738e-4ff7-8008-85eeb1a785fa"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PassiveSecondary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3466d7be-bd9a-4f24-a2f9-4cc5e0a6ef84"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Throwable"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fd98d2d6-8321-4203-900e-8fb22bee356e"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Throwable"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0eb8e3e-a0f0-49f1-a593-7b0f93d21af2"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f350237-ceca-4cb9-a36c-0b7f04b52419"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4bcd8b4-983d-4d38-ad2e-0e87427716ec"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Heal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""368faa67-3b15-4fa6-96db-419de1b02d6e"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Heal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea4fe440-e606-4055-979f-bdfc38b3b227"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""PickUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb6fd9cb-2455-4de5-9776-c8f1f6b52190"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PickUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -214,6 +462,16 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         m_DummyPlayer_HideTest = m_DummyPlayer.FindAction("HideTest", throwIfNotFound: true);
         m_DummyPlayer_Sneak = m_DummyPlayer.FindAction("Sneak", throwIfNotFound: true);
         m_DummyPlayer_MoveDetector = m_DummyPlayer.FindAction("MoveDetector", throwIfNotFound: true);
+        // Combat
+        m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
+        m_Combat_Primary = m_Combat.FindAction("Primary", throwIfNotFound: true);
+        m_Combat_Secondary = m_Combat.FindAction("Secondary", throwIfNotFound: true);
+        m_Combat_PassivePrimary = m_Combat.FindAction("PassivePrimary", throwIfNotFound: true);
+        m_Combat_PassiveSecondary = m_Combat.FindAction("PassiveSecondary", throwIfNotFound: true);
+        m_Combat_Throwable = m_Combat.FindAction("Throwable", throwIfNotFound: true);
+        m_Combat_Shoot = m_Combat.FindAction("Shoot", throwIfNotFound: true);
+        m_Combat_Heal = m_Combat.FindAction("Heal", throwIfNotFound: true);
+        m_Combat_PickUp = m_Combat.FindAction("PickUp", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -308,6 +566,95 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         }
     }
     public DummyPlayerActions @DummyPlayer => new DummyPlayerActions(this);
+
+    // Combat
+    private readonly InputActionMap m_Combat;
+    private ICombatActions m_CombatActionsCallbackInterface;
+    private readonly InputAction m_Combat_Primary;
+    private readonly InputAction m_Combat_Secondary;
+    private readonly InputAction m_Combat_PassivePrimary;
+    private readonly InputAction m_Combat_PassiveSecondary;
+    private readonly InputAction m_Combat_Throwable;
+    private readonly InputAction m_Combat_Shoot;
+    private readonly InputAction m_Combat_Heal;
+    private readonly InputAction m_Combat_PickUp;
+    public struct CombatActions
+    {
+        private @PlayerTriggers m_Wrapper;
+        public CombatActions(@PlayerTriggers wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Primary => m_Wrapper.m_Combat_Primary;
+        public InputAction @Secondary => m_Wrapper.m_Combat_Secondary;
+        public InputAction @PassivePrimary => m_Wrapper.m_Combat_PassivePrimary;
+        public InputAction @PassiveSecondary => m_Wrapper.m_Combat_PassiveSecondary;
+        public InputAction @Throwable => m_Wrapper.m_Combat_Throwable;
+        public InputAction @Shoot => m_Wrapper.m_Combat_Shoot;
+        public InputAction @Heal => m_Wrapper.m_Combat_Heal;
+        public InputAction @PickUp => m_Wrapper.m_Combat_PickUp;
+        public InputActionMap Get() { return m_Wrapper.m_Combat; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CombatActions set) { return set.Get(); }
+        public void SetCallbacks(ICombatActions instance)
+        {
+            if (m_Wrapper.m_CombatActionsCallbackInterface != null)
+            {
+                @Primary.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPrimary;
+                @Primary.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPrimary;
+                @Primary.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPrimary;
+                @Secondary.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnSecondary;
+                @Secondary.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnSecondary;
+                @Secondary.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnSecondary;
+                @PassivePrimary.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassivePrimary;
+                @PassivePrimary.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassivePrimary;
+                @PassivePrimary.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassivePrimary;
+                @PassiveSecondary.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
+                @PassiveSecondary.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
+                @PassiveSecondary.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
+                @Throwable.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnThrowable;
+                @Throwable.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnThrowable;
+                @Throwable.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnThrowable;
+                @Shoot.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
+                @Heal.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnHeal;
+                @Heal.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnHeal;
+                @Heal.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnHeal;
+                @PickUp.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPickUp;
+                @PickUp.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPickUp;
+                @PickUp.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPickUp;
+            }
+            m_Wrapper.m_CombatActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Primary.started += instance.OnPrimary;
+                @Primary.performed += instance.OnPrimary;
+                @Primary.canceled += instance.OnPrimary;
+                @Secondary.started += instance.OnSecondary;
+                @Secondary.performed += instance.OnSecondary;
+                @Secondary.canceled += instance.OnSecondary;
+                @PassivePrimary.started += instance.OnPassivePrimary;
+                @PassivePrimary.performed += instance.OnPassivePrimary;
+                @PassivePrimary.canceled += instance.OnPassivePrimary;
+                @PassiveSecondary.started += instance.OnPassiveSecondary;
+                @PassiveSecondary.performed += instance.OnPassiveSecondary;
+                @PassiveSecondary.canceled += instance.OnPassiveSecondary;
+                @Throwable.started += instance.OnThrowable;
+                @Throwable.performed += instance.OnThrowable;
+                @Throwable.canceled += instance.OnThrowable;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
+                @Heal.started += instance.OnHeal;
+                @Heal.performed += instance.OnHeal;
+                @Heal.canceled += instance.OnHeal;
+                @PickUp.started += instance.OnPickUp;
+                @PickUp.performed += instance.OnPickUp;
+                @PickUp.canceled += instance.OnPickUp;
+            }
+        }
+    }
+    public CombatActions @Combat => new CombatActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -331,5 +678,16 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         void OnHideTest(InputAction.CallbackContext context);
         void OnSneak(InputAction.CallbackContext context);
         void OnMoveDetector(InputAction.CallbackContext context);
+    }
+    public interface ICombatActions
+    {
+        void OnPrimary(InputAction.CallbackContext context);
+        void OnSecondary(InputAction.CallbackContext context);
+        void OnPassivePrimary(InputAction.CallbackContext context);
+        void OnPassiveSecondary(InputAction.CallbackContext context);
+        void OnThrowable(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
+        void OnHeal(InputAction.CallbackContext context);
+        void OnPickUp(InputAction.CallbackContext context);
     }
 }
