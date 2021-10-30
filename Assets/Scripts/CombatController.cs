@@ -9,9 +9,13 @@ public class CombatController : MonoBehaviour
     [SerializeField]
     CinemachineVirtualCamera freeLookCam;
     public Item[] inventory = new Item[6];
-    int firearmIndex, passiveIndex=2;
+    [SerializeField]
+    List<SeparateEffect> instantiationList; 
+    int firearmIndex, passiveIndex = 2;
+    int equippedIndex;
 
     int health;
+    bool firing, fired;
 
     public GameObject equipText;
     public bool showText;
@@ -19,20 +23,30 @@ public class CombatController : MonoBehaviour
     public LayerMask itemLayer;
     ItemTrigger targetedItem;
 
-    public bool equippedGeneral; //referenced in the FPS controller script
+    EnemyController enemyScript;
 
     void Start()
     {
+        enemyScript = FindObjectOfType<EnemyController>();
+
         combatControls = new PlayerTriggers();
         combatControls.Enable();
-        combatControls.Combat.PickUp.performed += ctx=> AddToInventory();
-        combatControls.Combat.Primary.performed += ctx=> EquipItem(0);
+        combatControls.Combat.PickUp.performed += ctx => AddToInventory();
+        combatControls.Combat.Primary.performed += ctx => EquipItem(0);
+        combatControls.Combat.PassivePrimary.performed += ctx => EquipItem(2);
+
+        combatControls.Combat.Shoot.started += ctx => Fire(true);
+        combatControls.Combat.Shoot.canceled += ctx => Fire(false);
     }
 
     private void OnDisable()
     {
-        combatControls.Combat.PickUp.performed -= ctx=> AddToInventory();
-        combatControls.Combat.Primary.performed -= ctx=> EquipItem(0);
+        combatControls.Combat.PickUp.performed -= ctx => AddToInventory();
+        combatControls.Combat.Primary.performed -= ctx => EquipItem(0);
+        combatControls.Combat.PassivePrimary.performed -= ctx => EquipItem(2);
+
+        combatControls.Combat.Shoot.started -= ctx => Fire(true);
+        combatControls.Combat.Shoot.canceled -= ctx => Fire(false);
     }
 
     private void Update()
@@ -44,6 +58,21 @@ public class CombatController : MonoBehaviour
         else
         {
             equipText.SetActive(false);
+        }
+
+        if (firing && !fired)
+        {
+            if(inventory[equippedIndex].currentAmmo > 0)
+            {
+                if (inventory[equippedIndex].itemType == ItemType.Firearm)
+                {
+                    StartCoroutine(DealDamage());
+                }
+                else if (inventory[equippedIndex].itemType == ItemType.Passive)
+                {
+                    Plant();
+                }
+            }
         }
     }
 
@@ -57,7 +86,7 @@ public class CombatController : MonoBehaviour
             switch (temp.itemType)
             {
                 case ItemType.Firearm:
-                    inventory[firearmIndex]=temp;
+                    inventory[firearmIndex] = temp;
                     firearmIndex++;
                     break;
                 case ItemType.Passive:
@@ -102,7 +131,69 @@ public class CombatController : MonoBehaviour
     void EquipItem(int index) {
         inventory[index].equipped = !inventory[index].equipped;
         inventory[index].graphics.gameObject.SetActive(inventory[index].equipped);
-        equippedGeneral = inventory[index].equipped;
+        equippedIndex = index;
     }
 
+    void Fire(bool toggle)
+    {
+        firing = toggle;
+    }
+
+    IEnumerator DealDamage()
+    {
+        fired = true;
+        enemyScript.health -= inventory[equippedIndex].damage;
+        yield return new WaitForSeconds(inventory[equippedIndex].delay);
+        fired = false;
+    }
+
+    void Plant()
+    {
+        inventory[equippedIndex].currentAmmo--;
+        GameObject plant = Instantiate(inventory[equippedIndex].graphics.gameObject, transform.position, Quaternion.identity);
+        var effScript = plant.AddComponent<SeparateEffect>();
+        var collider = plant.GetComponent<BoxCollider>();
+        collider.isTrigger = true;
+        collider.size = new Vector3(2f, 2f, 2f);
+
+        if (inventory[equippedIndex].name=="Landmine")
+        {
+            effScript.activateFunction = Explode;
+        }
+        else if(inventory[equippedIndex].name=="Slowdown")
+        {
+            effScript.activateFunction = SlowDown;
+        }
+        else if (inventory[equippedIndex].name == "Magnet")
+        {
+            effScript.activateFunction = Stop;
+        }
+    }
+
+    void Explode()
+    {
+        enemyScript.health -= inventory[equippedIndex].damage;
+    }
+
+    void SlowDown()
+    {
+        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed /= 5f;
+        StartCoroutine(RestoreSpeed());
+    }
+
+    void Stop()
+    {
+        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 0f;
+        StartCoroutine(StartMoving());
+    }
+
+    IEnumerator RestoreSpeed() {
+        yield return new WaitForSeconds(inventory[equippedIndex].delay);
+        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed *= 5f;
+    }
+    IEnumerator StartMoving()
+    {
+        yield return new WaitForSeconds(inventory[equippedIndex].delay);
+        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 2f;
+    }
 }

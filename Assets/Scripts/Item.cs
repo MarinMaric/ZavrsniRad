@@ -8,8 +8,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Item")]
 public class Item:ScriptableObject
 {
-    public int damage;
+    public int damage, bonus;
     public int currentAmmo, totalAmmo;
+    public int delay;
     public ItemType itemType;
     public bool equipped;
     public Transform graphics;

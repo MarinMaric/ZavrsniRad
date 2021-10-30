@@ -25,6 +25,8 @@ public class EnemyController : MonoBehaviour
     public event LostPlayer lostPlayerEvent;
     List<int> checkedRooms;
 
+    public int health = 100;
+
     void Start()
     {
         targetPosition = transform;
