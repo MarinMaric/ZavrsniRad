@@ -8,13 +8,13 @@ public class CombatController : MonoBehaviour
     PlayerTriggers combatControls;
     [SerializeField]
     CinemachineVirtualCamera freeLookCam;
-    public Item[] inventory = new Item[6];
+    public Item[] inventory = new Item[5];
     [SerializeField]
     List<SeparateEffect> instantiationList; 
     int firearmIndex, passiveIndex = 2;
     int equippedIndex;
 
-    int health;
+    public int health = 100;
     bool firing, fired;
 
     public GameObject equipText;
@@ -33,7 +33,10 @@ public class CombatController : MonoBehaviour
         combatControls.Enable();
         combatControls.Combat.PickUp.performed += ctx => AddToInventory();
         combatControls.Combat.Primary.performed += ctx => EquipItem(0);
+        combatControls.Combat.Secondary.performed += ctx => EquipItem(1);
         combatControls.Combat.PassivePrimary.performed += ctx => EquipItem(2);
+        combatControls.Combat.PassiveSecondary.performed += ctx => EquipItem(3);
+        combatControls.Combat.Heal.performed += ctx => EquipItem(4);
 
         combatControls.Combat.Shoot.started += ctx => Fire(true);
         combatControls.Combat.Shoot.canceled += ctx => Fire(false);
@@ -43,7 +46,10 @@ public class CombatController : MonoBehaviour
     {
         combatControls.Combat.PickUp.performed -= ctx => AddToInventory();
         combatControls.Combat.Primary.performed -= ctx => EquipItem(0);
+        combatControls.Combat.PassivePrimary.performed -= ctx => EquipItem(1);
         combatControls.Combat.PassivePrimary.performed -= ctx => EquipItem(2);
+        combatControls.Combat.PassiveSecondary.performed -= ctx => EquipItem(3);
+        combatControls.Combat.Heal.performed -= ctx => EquipItem(4);
 
         combatControls.Combat.Shoot.started -= ctx => Fire(true);
         combatControls.Combat.Shoot.canceled -= ctx => Fire(false);
@@ -72,6 +78,10 @@ public class CombatController : MonoBehaviour
                 {
                     Plant();
                 }
+                else if(inventory[equippedIndex].itemType == ItemType.Heal)
+                {
+                    Heal();
+                }
             }
         }
     }
@@ -93,11 +103,8 @@ public class CombatController : MonoBehaviour
                     inventory[passiveIndex] = temp;
                     passiveIndex++;
                     break;
-                case ItemType.Throwable:
-                    inventory[4] = temp;
-                    break;
                 case ItemType.Heal:
-                    inventory[5] = temp;
+                    inventory[4] = temp;
                     break;
                 default:
                     break;
@@ -168,6 +175,12 @@ public class CombatController : MonoBehaviour
         {
             effScript.activateFunction = Stop;
         }
+    }
+    
+    void Heal()
+    {
+        inventory[equippedIndex].currentAmmo--;
+        health = Mathf.Clamp(health + inventory[equippedIndex].bonus, health, 100);
     }
 
     void Explode()

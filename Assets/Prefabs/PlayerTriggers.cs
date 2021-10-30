@@ -226,14 +226,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Throwable"",
-                    ""type"": ""Button"",
-                    ""id"": ""27524062-cd47-4b60-98ec-5db252a116a3"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Shoot"",
                     ""type"": ""Button"",
                     ""id"": ""3ec88d32-476c-4787-a7c8-14ccce5b9a8e"",
@@ -349,28 +341,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3466d7be-bd9a-4f24-a2f9-4cc5e0a6ef84"",
-                    ""path"": ""<Keyboard>/5"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Throwable"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""fd98d2d6-8321-4203-900e-8fb22bee356e"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Throwable"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""b0eb8e3e-a0f0-49f1-a593-7b0f93d21af2"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
@@ -394,7 +364,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c4bcd8b4-983d-4d38-ad2e-0e87427716ec"",
-                    ""path"": ""<Keyboard>/6"",
+                    ""path"": ""<Keyboard>/5"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -405,7 +375,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""368faa67-3b15-4fa6-96db-419de1b02d6e"",
-                    ""path"": ""<Gamepad>/select"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -468,7 +438,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         m_Combat_Secondary = m_Combat.FindAction("Secondary", throwIfNotFound: true);
         m_Combat_PassivePrimary = m_Combat.FindAction("PassivePrimary", throwIfNotFound: true);
         m_Combat_PassiveSecondary = m_Combat.FindAction("PassiveSecondary", throwIfNotFound: true);
-        m_Combat_Throwable = m_Combat.FindAction("Throwable", throwIfNotFound: true);
         m_Combat_Shoot = m_Combat.FindAction("Shoot", throwIfNotFound: true);
         m_Combat_Heal = m_Combat.FindAction("Heal", throwIfNotFound: true);
         m_Combat_PickUp = m_Combat.FindAction("PickUp", throwIfNotFound: true);
@@ -574,7 +543,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
     private readonly InputAction m_Combat_Secondary;
     private readonly InputAction m_Combat_PassivePrimary;
     private readonly InputAction m_Combat_PassiveSecondary;
-    private readonly InputAction m_Combat_Throwable;
     private readonly InputAction m_Combat_Shoot;
     private readonly InputAction m_Combat_Heal;
     private readonly InputAction m_Combat_PickUp;
@@ -586,7 +554,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         public InputAction @Secondary => m_Wrapper.m_Combat_Secondary;
         public InputAction @PassivePrimary => m_Wrapper.m_Combat_PassivePrimary;
         public InputAction @PassiveSecondary => m_Wrapper.m_Combat_PassiveSecondary;
-        public InputAction @Throwable => m_Wrapper.m_Combat_Throwable;
         public InputAction @Shoot => m_Wrapper.m_Combat_Shoot;
         public InputAction @Heal => m_Wrapper.m_Combat_Heal;
         public InputAction @PickUp => m_Wrapper.m_Combat_PickUp;
@@ -611,9 +578,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 @PassiveSecondary.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
                 @PassiveSecondary.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
                 @PassiveSecondary.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
-                @Throwable.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnThrowable;
-                @Throwable.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnThrowable;
-                @Throwable.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnThrowable;
                 @Shoot.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
@@ -639,9 +603,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 @PassiveSecondary.started += instance.OnPassiveSecondary;
                 @PassiveSecondary.performed += instance.OnPassiveSecondary;
                 @PassiveSecondary.canceled += instance.OnPassiveSecondary;
-                @Throwable.started += instance.OnThrowable;
-                @Throwable.performed += instance.OnThrowable;
-                @Throwable.canceled += instance.OnThrowable;
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
@@ -685,7 +646,6 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         void OnSecondary(InputAction.CallbackContext context);
         void OnPassivePrimary(InputAction.CallbackContext context);
         void OnPassiveSecondary(InputAction.CallbackContext context);
-        void OnThrowable(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
         void OnPickUp(InputAction.CallbackContext context);

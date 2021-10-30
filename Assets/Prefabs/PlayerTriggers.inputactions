@@ -213,14 +213,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Throwable",
-                    "type": "Button",
-                    "id": "27524062-cd47-4b60-98ec-5db252a116a3",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Shoot",
                     "type": "Button",
                     "id": "3ec88d32-476c-4787-a7c8-14ccce5b9a8e",
@@ -336,28 +328,6 @@
                 },
                 {
                     "name": "",
-                    "id": "3466d7be-bd9a-4f24-a2f9-4cc5e0a6ef84",
-                    "path": "<Keyboard>/5",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "Throwable",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "fd98d2d6-8321-4203-900e-8fb22bee356e",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Throwable",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "b0eb8e3e-a0f0-49f1-a593-7b0f93d21af2",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -381,7 +351,7 @@
                 {
                     "name": "",
                     "id": "c4bcd8b4-983d-4d38-ad2e-0e87427716ec",
-                    "path": "<Keyboard>/6",
+                    "path": "<Keyboard>/5",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -392,7 +362,7 @@
                 {
                     "name": "",
                     "id": "368faa67-3b15-4fa6-96db-419de1b02d6e",
-                    "path": "<Gamepad>/select",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",

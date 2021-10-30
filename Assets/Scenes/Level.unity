@@ -890,7 +890,7 @@ GameObject:
   - component: {fileID: 496472404}
   - component: {fileID: 496472403}
   m_Layer: 0
-  m_Name: Magnet
+  m_Name: Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -908,7 +908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d0272486df524b459cbec7790744c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 0bff0bd40b5c5474c9e09316e2ec9421, type: 2}
+  item: {fileID: 11400000, guid: e3ad2877290e7b04e84fe1c0984e8e25, type: 2}
   graphics: {fileID: 280948473}
 --- !u!65 &496472404
 BoxCollider:
@@ -967,8 +967,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
   instantiationList: []
+  health: 80
   equipText: {fileID: 1456257094}
   showText: 0
   itemLayer:

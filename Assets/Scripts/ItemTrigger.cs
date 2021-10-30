@@ -25,5 +25,5 @@ public class ItemTrigger : MonoBehaviour
 
 public enum ItemType
 {
-    Firearm, Passive, Throwable, Heal
+    Firearm, Passive, Heal
 }
