@@ -12,6 +12,5 @@ public class Item:ScriptableObject
     public int currentAmmo, totalAmmo;
     public int delay;
     public ItemType itemType;
-    public bool equipped;
     public Transform graphics;
 }

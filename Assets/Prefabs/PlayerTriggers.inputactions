@@ -213,6 +213,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "PassiveThird",
+                    "type": "Button",
+                    "id": "54b1f513-4af6-46a4-8551-6c318ec689be",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Shoot",
                     "type": "Button",
                     "id": "3ec88d32-476c-4787-a7c8-14ccce5b9a8e",
@@ -351,7 +359,7 @@
                 {
                     "name": "",
                     "id": "c4bcd8b4-983d-4d38-ad2e-0e87427716ec",
-                    "path": "<Keyboard>/5",
+                    "path": "<Keyboard>/6",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -389,6 +397,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "PickUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3cd4784-ef8c-4c2a-8386-2ac3ca673ac1",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "PassiveThird",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "53ef94a4-6a91-4f08-89c6-64e7584c9255",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "PassiveThird",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

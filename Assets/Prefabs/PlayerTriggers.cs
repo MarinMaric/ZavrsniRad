@@ -226,6 +226,14 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""PassiveThird"",
+                    ""type"": ""Button"",
+                    ""id"": ""54b1f513-4af6-46a4-8551-6c318ec689be"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Shoot"",
                     ""type"": ""Button"",
                     ""id"": ""3ec88d32-476c-4787-a7c8-14ccce5b9a8e"",
@@ -364,7 +372,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c4bcd8b4-983d-4d38-ad2e-0e87427716ec"",
-                    ""path"": ""<Keyboard>/5"",
+                    ""path"": ""<Keyboard>/6"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
@@ -404,6 +412,28 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                     ""action"": ""PickUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b3cd4784-ef8c-4c2a-8386-2ac3ca673ac1"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""PassiveThird"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53ef94a4-6a91-4f08-89c6-64e7584c9255"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""PassiveThird"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -438,6 +468,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         m_Combat_Secondary = m_Combat.FindAction("Secondary", throwIfNotFound: true);
         m_Combat_PassivePrimary = m_Combat.FindAction("PassivePrimary", throwIfNotFound: true);
         m_Combat_PassiveSecondary = m_Combat.FindAction("PassiveSecondary", throwIfNotFound: true);
+        m_Combat_PassiveThird = m_Combat.FindAction("PassiveThird", throwIfNotFound: true);
         m_Combat_Shoot = m_Combat.FindAction("Shoot", throwIfNotFound: true);
         m_Combat_Heal = m_Combat.FindAction("Heal", throwIfNotFound: true);
         m_Combat_PickUp = m_Combat.FindAction("PickUp", throwIfNotFound: true);
@@ -543,6 +574,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
     private readonly InputAction m_Combat_Secondary;
     private readonly InputAction m_Combat_PassivePrimary;
     private readonly InputAction m_Combat_PassiveSecondary;
+    private readonly InputAction m_Combat_PassiveThird;
     private readonly InputAction m_Combat_Shoot;
     private readonly InputAction m_Combat_Heal;
     private readonly InputAction m_Combat_PickUp;
@@ -554,6 +586,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         public InputAction @Secondary => m_Wrapper.m_Combat_Secondary;
         public InputAction @PassivePrimary => m_Wrapper.m_Combat_PassivePrimary;
         public InputAction @PassiveSecondary => m_Wrapper.m_Combat_PassiveSecondary;
+        public InputAction @PassiveThird => m_Wrapper.m_Combat_PassiveThird;
         public InputAction @Shoot => m_Wrapper.m_Combat_Shoot;
         public InputAction @Heal => m_Wrapper.m_Combat_Heal;
         public InputAction @PickUp => m_Wrapper.m_Combat_PickUp;
@@ -578,6 +611,9 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 @PassiveSecondary.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
                 @PassiveSecondary.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
                 @PassiveSecondary.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveSecondary;
+                @PassiveThird.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveThird;
+                @PassiveThird.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveThird;
+                @PassiveThird.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnPassiveThird;
                 @Shoot.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnShoot;
@@ -603,6 +639,9 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 @PassiveSecondary.started += instance.OnPassiveSecondary;
                 @PassiveSecondary.performed += instance.OnPassiveSecondary;
                 @PassiveSecondary.canceled += instance.OnPassiveSecondary;
+                @PassiveThird.started += instance.OnPassiveThird;
+                @PassiveThird.performed += instance.OnPassiveThird;
+                @PassiveThird.canceled += instance.OnPassiveThird;
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
@@ -646,6 +685,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         void OnSecondary(InputAction.CallbackContext context);
         void OnPassivePrimary(InputAction.CallbackContext context);
         void OnPassiveSecondary(InputAction.CallbackContext context);
+        void OnPassiveThird(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
         void OnPickUp(InputAction.CallbackContext context);

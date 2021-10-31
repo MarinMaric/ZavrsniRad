@@ -8,11 +8,11 @@ public class CombatController : MonoBehaviour
     PlayerTriggers combatControls;
     [SerializeField]
     CinemachineVirtualCamera freeLookCam;
-    public Item[] inventory = new Item[5];
+    public Item[] inventory = new Item[6];
     [SerializeField]
     List<SeparateEffect> instantiationList; 
     int firearmIndex, passiveIndex = 2;
-    int equippedIndex;
+    int equippedIndex=-1;
 
     public int health = 100;
     bool firing, fired;
@@ -36,7 +36,8 @@ public class CombatController : MonoBehaviour
         combatControls.Combat.Secondary.performed += ctx => EquipItem(1);
         combatControls.Combat.PassivePrimary.performed += ctx => EquipItem(2);
         combatControls.Combat.PassiveSecondary.performed += ctx => EquipItem(3);
-        combatControls.Combat.Heal.performed += ctx => EquipItem(4);
+        combatControls.Combat.PassiveThird.performed += ctx => EquipItem(4);
+        combatControls.Combat.Heal.performed += ctx => EquipItem(5);
 
         combatControls.Combat.Shoot.started += ctx => Fire(true);
         combatControls.Combat.Shoot.canceled += ctx => Fire(false);
@@ -49,7 +50,8 @@ public class CombatController : MonoBehaviour
         combatControls.Combat.PassivePrimary.performed -= ctx => EquipItem(1);
         combatControls.Combat.PassivePrimary.performed -= ctx => EquipItem(2);
         combatControls.Combat.PassiveSecondary.performed -= ctx => EquipItem(3);
-        combatControls.Combat.Heal.performed -= ctx => EquipItem(4);
+        combatControls.Combat.PassiveThird.performed -= ctx => EquipItem(4);
+        combatControls.Combat.Heal.performed -= ctx => EquipItem(5);
 
         combatControls.Combat.Shoot.started -= ctx => Fire(true);
         combatControls.Combat.Shoot.canceled -= ctx => Fire(false);
@@ -70,7 +72,7 @@ public class CombatController : MonoBehaviour
         {
             if(inventory[equippedIndex].currentAmmo > 0)
             {
-                if (inventory[equippedIndex].itemType == ItemType.Firearm)
+                if (inventory[equippedIndex].itemType == ItemType.Firearm && AimForEnemy())
                 {
                     StartCoroutine(DealDamage());
                 }
@@ -136,14 +138,23 @@ public class CombatController : MonoBehaviour
     }
 
     void EquipItem(int index) {
-        inventory[index].equipped = !inventory[index].equipped;
-        inventory[index].graphics.gameObject.SetActive(inventory[index].equipped);
-        equippedIndex = index;
+        if (equippedIndex == index)
+        {
+            inventory[index].graphics.gameObject.SetActive(false);
+            equippedIndex = -1;
+        }
+        else
+        {
+            inventory[equippedIndex].graphics.gameObject.SetActive(false);
+            inventory[index].graphics.gameObject.SetActive(true);
+            equippedIndex = index;
+        }
     }
 
     void Fire(bool toggle)
     {
-        firing = toggle;
+        if(equippedIndex!=-1)
+            firing = toggle;
     }
 
     IEnumerator DealDamage()
@@ -208,5 +219,14 @@ public class CombatController : MonoBehaviour
     {
         yield return new WaitForSeconds(inventory[equippedIndex].delay);
         enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 2f;
+    }
+
+    bool AimForEnemy()
+    {
+        Vector3 direction = freeLookCam.State.CorrectedOrientation * Vector3.forward;
+        RaycastHit hitInfo;
+        Physics.Raycast(freeLookCam.transform.position, direction, out hitInfo, float.MaxValue);
+        Debug.Log(hitInfo.collider.name);
+        return hitInfo.collider.tag == "Robot";
     }
 }
