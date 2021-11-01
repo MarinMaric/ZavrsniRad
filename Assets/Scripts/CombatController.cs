@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CombatController : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class CombatController : MonoBehaviour
 
     public GameObject equipText;
     public bool showText;
+    public List<Image> weaponIcons;
+    public List<ParticleSystem> effects;
 
     public LayerMask itemLayer;
     ItemTrigger targetedItem;
@@ -72,6 +75,8 @@ public class CombatController : MonoBehaviour
         {
             if(inventory[equippedIndex].currentAmmo > 0)
             {
+                DisplayEffect();
+
                 if (inventory[equippedIndex].itemType == ItemType.Firearm && AimForEnemy())
                 {
                     StartCoroutine(DealDamage());
@@ -99,14 +104,20 @@ public class CombatController : MonoBehaviour
             {
                 case ItemType.Firearm:
                     inventory[firearmIndex] = temp;
+                    weaponIcons[firearmIndex].GetComponent<Image>().enabled = true;
+                    weaponIcons[firearmIndex].sprite = Resources.Load<Sprite>(temp.name);
                     firearmIndex++;
                     break;
                 case ItemType.Passive:
                     inventory[passiveIndex] = temp;
+                    weaponIcons[passiveIndex].GetComponent<Image>().enabled = true;
+                    weaponIcons[passiveIndex].sprite = Resources.Load<Sprite>(temp.name);
                     passiveIndex++;
                     break;
                 case ItemType.Heal:
-                    inventory[4] = temp;
+                    inventory[5] = temp;
+                    weaponIcons[5].GetComponent<Image>().enabled = true;
+                    weaponIcons[5].sprite = Resources.Load<Sprite>(temp.name);
                     break;
                 default:
                     break;
@@ -143,9 +154,10 @@ public class CombatController : MonoBehaviour
             inventory[index].graphics.gameObject.SetActive(false);
             equippedIndex = -1;
         }
-        else
+        else if(inventory[index]!=null)
         {
-            inventory[equippedIndex].graphics.gameObject.SetActive(false);
+            if(equippedIndex!=-1)
+                inventory[equippedIndex].graphics.gameObject.SetActive(false);
             inventory[index].graphics.gameObject.SetActive(true);
             equippedIndex = index;
         }
@@ -155,6 +167,11 @@ public class CombatController : MonoBehaviour
     {
         if(equippedIndex!=-1)
             firing = toggle;
+
+        if (firing == false)
+        {
+            TurnOffEffects();
+        }
     }
 
     IEnumerator DealDamage()
@@ -168,14 +185,17 @@ public class CombatController : MonoBehaviour
     void Plant()
     {
         inventory[equippedIndex].currentAmmo--;
-        GameObject plant = Instantiate(inventory[equippedIndex].graphics.gameObject, transform.position, Quaternion.identity);
+        GameObject plant = Instantiate(inventory[equippedIndex].graphics.gameObject, transform.position, Quaternion.LookRotation(Vector3.up, transform.forward));
+       
         var effScript = plant.AddComponent<SeparateEffect>();
-        var collider = plant.GetComponent<BoxCollider>();
+        var collider = plant.AddComponent<BoxCollider>();
+        collider.size = new Vector3(.15f, .15f, .15f);
         collider.isTrigger = true;
-        collider.size = new Vector3(2f, 2f, 2f);
 
         if (inventory[equippedIndex].name=="Landmine")
         {
+            var explosion = Instantiate(effects[2], plant.transform.position, Quaternion.identity);
+            effScript.effect = explosion;
             effScript.activateFunction = Explode;
         }
         else if(inventory[equippedIndex].name=="Slowdown")
@@ -225,8 +245,36 @@ public class CombatController : MonoBehaviour
     {
         Vector3 direction = freeLookCam.State.CorrectedOrientation * Vector3.forward;
         RaycastHit hitInfo;
-        Physics.Raycast(freeLookCam.transform.position, direction, out hitInfo, float.MaxValue);
+        Physics.Raycast(freeLookCam.transform.position, direction, out hitInfo, float.MaxValue, ~itemLayer, QueryTriggerInteraction.Ignore);
         Debug.Log(hitInfo.collider.name);
         return hitInfo.collider.tag == "Robot";
+    }
+
+    void DisplayEffect()
+    {
+        if (inventory[equippedIndex].name == "Flamethrower")
+        {
+            effects[0].Play();
+        }
+        else if (inventory[equippedIndex].name == "Shotgun")
+        {
+            effects[1].Play();
+        }
+    }
+
+    void TurnOffEffects()
+    {
+        effects[0].Stop();
+    }
+
+    private void OnDestroy()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (inventory[i] != null)
+            {
+                inventory[i].currentAmmo = inventory[i].totalAmmo;
+            }
+        }
     }
 }
