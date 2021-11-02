@@ -15,7 +15,8 @@ public class GridChanger : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            other.transform.parent.GetComponent<HidingController>().currentRoom += playerPassed ? -1 : 1;
+            other.transform.GetComponent<HidingController>().currentRoom += playerPassed ? -1 : 1;
+            playerPassed = !playerPassed;
         }
         if (other.tag=="Robot")
         {

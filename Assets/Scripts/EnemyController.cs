@@ -25,7 +25,11 @@ public class EnemyController : MonoBehaviour
     public event LostPlayer lostPlayerEvent;
     List<int> checkedRooms;
 
-    public int health = 100;
+    public int health = 100, attackRange;
+    public int damage = 40, delay = 2;
+    public bool inRange, attacked = false;
+    [HideInInspector]
+    public bool killedPlayer = false;
 
     void Start()
     {
@@ -118,7 +122,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public NodeState CheckForPlayer()
+     public NodeState CheckForPlayer()
     {
         //if (beganChasing)
         //    return NodeState.SUCCESS;
@@ -174,14 +178,15 @@ public class EnemyController : MonoBehaviour
             resetPathEvent.Invoke();
         }
 
-        if (transform.position != motor.targetPosition)
+        if (Vector3.Distance(transform.position, motor.targetPosition) > attackRange)
         {
-            Debug.DrawRay(transform.position, transform.forward, Color.red);
+            inRange = false;
             motor.Move();
             return NodeState.RUNNING;
         }
-        else if(Physics.CheckSphere(transform.position, FindObjectOfType<Pathfinder>().fieldWidth, playerLayer, QueryTriggerInteraction.Ignore))
+        else if(Physics.CheckSphere(transform.position, attackRange, playerLayer, QueryTriggerInteraction.Ignore))
         {
+            inRange = true;
             Debug.Log("Caught player");
             return NodeState.SUCCESS;
         }
@@ -191,6 +196,7 @@ public class EnemyController : MonoBehaviour
 
             detectedPlayer = false;
             beganChasing = false;
+            inRange = false;
 
             lostPlayerEvent.Invoke();
             return NodeState.FAILURE;
@@ -199,7 +205,31 @@ public class EnemyController : MonoBehaviour
 
     public NodeState AttackPlayer()
     {
-        return NodeState.FAILURE;
+        if (killedPlayer)
+            return NodeState.SUCCESS;
+
+        if (inRange && !attacked)
+        {
+            StartCoroutine(DealDamage());
+            return NodeState.RUNNING;
+        }
+        else
+        {
+            return NodeState.FAILURE;
+        }
+    }
+
+    IEnumerator DealDamage()
+    {
+        attacked = true;
+        var cc = FindObjectOfType<CombatController>();
+        if (cc.health <= 0)
+            killedPlayer = true;
+        else
+            cc.health -= damage;
+
+        yield return new WaitForSeconds(delay);
+        attacked = false;
     }
 
     private void OnDrawGizmos()
