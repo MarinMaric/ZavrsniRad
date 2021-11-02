@@ -26,6 +26,10 @@ public class HidingController : MonoBehaviour
     public int currentRoom = 2;
     bool alreadyFreed = false;
 
+    public Transform ventVisual, closetVisual;
+    Quaternion ventRotationOG, closetRotationOG;
+    public float distanceFromCamera = 1f;
+
     private void OnEnable()
     {
         playerTriggers = new PlayerTriggers();
@@ -37,6 +41,11 @@ public class HidingController : MonoBehaviour
 
         playerTriggers.DummyPlayer.MoveDetector.started += ctx => Moving(true);
         playerTriggers.DummyPlayer.MoveDetector.canceled += ctx => Moving(false);
+
+        ventRotationOG = ventVisual.rotation;
+        closetRotationOG = closetVisual.rotation;
+        ventVisual.gameObject.SetActive(false);
+        closetVisual.gameObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -107,6 +116,7 @@ public class HidingController : MonoBehaviour
             sneaking = true;
 
             TogglePlayer(true);
+            TurnOffVisuals();
             Debug.Log("Player left the hiding spot");
 
             StartCoroutine(KeepSafe());
@@ -133,6 +143,33 @@ public class HidingController : MonoBehaviour
     {
         hidingCamera.transform.position = spotTransform.position;
         hidingCamera.transform.rotation = Quaternion.LookRotation(spotTransform.forward);
+
+        if (spotTransform.tag == "Vent")
+        {
+            ventVisual.position = spotTransform.position + spotTransform.forward * distanceFromCamera;
+            ventVisual.rotation = Quaternion.LookRotation(Vector3.up, spotTransform.forward);
+            ventVisual.gameObject.SetActive(true);
+        }
+        else
+        {
+            closetVisual.position = spotTransform.position + spotTransform.forward * distanceFromCamera;
+            closetVisual.rotation=Quaternion.LookRotation(Vector3.up, spotTransform.forward);
+            closetVisual.gameObject.SetActive(true);
+        }
+    }
+
+    void TurnOffVisuals()
+    {
+        if (ventVisual.gameObject.activeSelf)
+        {
+            ventVisual.rotation = ventRotationOG;
+            ventVisual.gameObject.SetActive(false);
+        }
+        if (closetVisual.gameObject.activeSelf)
+        {
+            closetVisual.rotation = closetRotationOG;
+            closetVisual.gameObject.SetActive(false);
+        }
     }
 
     void Sneak(bool toggle)
