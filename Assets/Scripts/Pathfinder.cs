@@ -21,7 +21,6 @@ public class Pathfinder : MonoBehaviour
     EnemyController robotController;
 
     public Transform player;
-    HidingController playerHiding;
 
     public float fieldWidth
     {
@@ -36,7 +35,6 @@ public class Pathfinder : MonoBehaviour
         robotMotor = robot.GetComponent<RobotMotor>();
         robotController = robot.GetComponent<EnemyController>();
         robotController.resetPathEvent += SetPath; 
-        playerHiding = player.GetComponent<HidingController>();
     }
 
     private void Update()
@@ -47,12 +45,6 @@ public class Pathfinder : MonoBehaviour
             {
                 SetPath();
             }
-        }
-
-        if(playerHiding.currentRoom == robotController.activeRoom && playerHiding.moving && !playerHiding.sneaking)
-        {
-            robot.GetComponent<EnemyController>().detectedPlayer = true;
-            robot.GetComponent<EnemyController>().ChasePlayer();
         }
     }
 

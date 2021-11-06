@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class EnemyController : MonoBehaviour
     List<PointControl> points = new List<PointControl>();
     int priorityIndex = -1;
     public int activeRoom = 1;
+    public bool backtracking = false;
 
     public delegate void ResetPath();
     public event ResetPath resetPathEvent;
@@ -75,8 +77,14 @@ public class EnemyController : MonoBehaviour
                 points.RemoveAt(index);
                 resetPathEvent.Invoke();
             }
+            //HACKING TEST
+            //else
+            //{
+            //    SceneManager.LoadScene(0);
+            //}
             else
             {
+
                 //if all the points in the room have been checked then mark the whole room as checked
                 checkedRooms.Add(activeRoom);
 
@@ -87,7 +95,7 @@ public class EnemyController : MonoBehaviour
                 foreach (var h in hits)
                 {
                     //h.collider.GetComponent<PointControl>().visited = false;
-                    if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId==activeRoom && h.collider.GetComponent<PointControl>().visited == false)
+                    if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId == activeRoom && h.collider.GetComponent<PointControl>().visited == false)
                         points.Add(h.collider.GetComponent<PointControl>());
                 }
 
@@ -96,6 +104,22 @@ public class EnemyController : MonoBehaviour
                     targetPosition = points[0].transform;
                     resetPathEvent.Invoke();
                 }
+                else
+                {
+                    //since there are no more rooms switch to backtracking mode
+                    foreach (var h in hits)
+                    {
+                        if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId == activeRoom-1)
+                        {
+                            points.Add(h.collider.GetComponent<PointControl>());
+                        }
+                    }
+                }
+                //else
+                //{
+                //    //HACKING TEST
+                //    SceneManager.LoadScene(0);
+                //}
             }
         }
 
@@ -124,8 +148,8 @@ public class EnemyController : MonoBehaviour
 
      public NodeState CheckForPlayer()
     {
-        //if (beganChasing)
-        //    return NodeState.SUCCESS;
+        if (beganChasing)
+            return NodeState.SUCCESS;
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectableRadius, transform.forward, 0, playerLayer.value, QueryTriggerInteraction.Collide);
 
@@ -138,7 +162,10 @@ public class EnemyController : MonoBehaviour
             {
                 //Just in case the robot picks it up when it doesn't even have that priority
                 if(FindObjectOfType<HidingController>().hiding && !priorities.Contains(FindObjectOfType<HidingController>().hidingSpot))
+                {
+                    detectedPlayer = false;
                     return NodeState.FAILURE;
+                }
 
                 RaycastHit checkObstacle;
                 Ray ray = new Ray(transform.position, direction);
@@ -223,9 +250,9 @@ public class EnemyController : MonoBehaviour
     {
         attacked = true;
         var cc = FindObjectOfType<CombatController>();
-        if (cc.health <= 0)
-            killedPlayer = true;
-        else
+        //if (cc.health <= 0)
+        //    killedPlayer = true;
+        //else
             cc.health -= damage;
 
         yield return new WaitForSeconds(delay);

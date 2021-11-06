@@ -50,5 +50,10 @@ public class BehaviorTree : MonoBehaviour
 
         root = new SequenceNode(childNodes);
     }
+
+    private void OnDisable()
+    {
+        startedBehavior = false;
+    }
 }
     

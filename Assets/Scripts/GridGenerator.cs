@@ -13,8 +13,7 @@ public class GridGenerator : MonoBehaviour
     Transform spawnPoint;
     [SerializeField]
     List<Transform> spawnPoints;
-    [SerializeField]
-    List<GridChanger> changeTriggers;
+    public List<GridChanger> changeTriggers;
     public Transform targetWorld;
     public LayerMask obstacleMask;
     public List<Field> path;
@@ -30,6 +29,7 @@ public class GridGenerator : MonoBehaviour
         foreach(var t in changeTriggers)
         {
             t.changeEvent += ChangeSpawnPoint;
+            t.clearEvent += ClearSubsequent;
         }
 
         spawnPoint = spawnPoints[0].transform;
@@ -120,7 +120,7 @@ public class GridGenerator : MonoBehaviour
         return neighbors;
     }
 
-    void ChangeSpawnPoint(int index)
+    public void ChangeSpawnPoint(int index)
     {
         spawnPoint = spawnPoints[index].transform;
         var pointScript = spawnPoint.GetComponent<SpawnPoint>();
@@ -132,6 +132,14 @@ public class GridGenerator : MonoBehaviour
         foreach (var p in exitPoints)
         {
             p.GetComponent<PointControl>().visited = false;
+        }
+    }
+
+    public void ClearSubsequent(int index)
+    {
+        for (int i = index; i < changeTriggers.Count; i++)
+        {
+            changeTriggers[i].robotPassed = false;
         }
     }
 

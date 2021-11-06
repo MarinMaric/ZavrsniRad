@@ -5,11 +5,11 @@ using UnityEngine;
 public class GridChanger : MonoBehaviour
 {
     public int index;
-    bool robotPassed = false, playerPassed = false;
+    public bool robotPassed = false;
+    private bool playerPassed = false;
 
     public delegate void ChangeSpawn(int i);
-    public event ChangeSpawn changeEvent;
-
+    public event ChangeSpawn changeEvent, clearEvent;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -20,20 +20,63 @@ public class GridChanger : MonoBehaviour
         }
         if (other.tag=="Robot")
         {
+            var enemyController = FindObjectOfType<EnemyController>();
+
             if (!robotPassed)
             {
                 changeEvent(index);
                 robotPassed = true;
-                FindObjectOfType<EnemyController>().activeRoom++;
+                enemyController.activeRoom++;
             }
             else
             {
                 changeEvent(index - 1);
                 robotPassed = false;
-                FindObjectOfType<EnemyController>().activeRoom--;
+                if (!enemyController.backtracking)
+                    enemyController.activeRoom--;
             }
+        }
+    }
 
-            //Debug.Log("Moved to: " + FindObjectOfType<EnemyController>().activeRoom);
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Robot")
+        {
+            var enemyController = FindObjectOfType<EnemyController>();
+
+            //HACKING TEST
+            if (!enemyController.backtracking)
+            {
+                if (enemyController.activeRoom != index + 1)
+                {
+                    if (!robotPassed)
+                    {
+                        changeEvent(index);
+                        robotPassed = true;
+                        FindObjectOfType<EnemyController>().activeRoom++;
+                    }
+                    else
+                    {
+                        changeEvent(index - 1);
+                        robotPassed = false;
+                        FindObjectOfType<EnemyController>().activeRoom--;
+                    }
+                }
+            }
+            else
+            {
+                enemyController.backtracking = false;
+
+                clearEvent.Invoke(index);
+            }
+            //else
+            //{
+            //    if (robotPassed)
+            //    {
+            //        changeEvent(index - 1);
+            //        robotPassed = false;
+            //    }
+            //}
         }
     }
 }
