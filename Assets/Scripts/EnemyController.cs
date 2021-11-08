@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     public LayerMask pointsLayer, playerLayer, obstacleLayer;
     public Recorder recorder;
     List<string> priorities;
+    Dictionary<string, int> immunities;
     List<PointControl> points = new List<PointControl>();
     int priorityIndex = -1;
     public int activeRoom = 1;
@@ -38,6 +39,9 @@ public class EnemyController : MonoBehaviour
         targetPosition = transform;
         motor.targetPosition = transform.position;
         priorities = recorder.GetPriorities();
+        immunities = recorder.GetImmunities();
+
+        FindObjectOfType<CombatController>().dealtDamageEvent += TakeDamage;
 
         checkedRooms = new List<int>();
     }
@@ -257,6 +261,14 @@ public class EnemyController : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
         attacked = false;
+    }
+
+    void TakeDamage(Item weapon)
+    {
+        if (weapon.damage > 0)
+        {
+            health -= (weapon.damage - weapon.damage * immunities[weapon.name] / 100);
+        }
     }
 
     private void OnDrawGizmos()

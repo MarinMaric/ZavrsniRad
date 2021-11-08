@@ -16,6 +16,6 @@ MonoBehaviour:
   bonus: 0
   currentAmmo: 30
   totalAmmo: 30
-  delay: 0
+  delay: 2
   itemType: 0
   graphics: {fileID: 0}

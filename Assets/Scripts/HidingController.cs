@@ -30,6 +30,9 @@ public class HidingController : MonoBehaviour
     Quaternion ventRotationOG, closetRotationOG;
     public float distanceFromCamera = 1f;
 
+    public delegate void HideDelegate(string tag);
+    public event HideDelegate hideEvent;
+
     private void OnEnable()
     {
         playerTriggers = new PlayerTriggers();
@@ -111,6 +114,7 @@ public class HidingController : MonoBehaviour
     {
         if (hiding)
         {
+            hideEvent.Invoke(spotTransform.tag);
             hiding = false;
             leaveText.SetActive(false);
             sneaking = true;
@@ -194,5 +198,15 @@ public class HidingController : MonoBehaviour
             sneaking = false;
             alreadyFreed = true;
         }
+    }
+
+    public void ResetPlayer()
+    {
+        currentRoom = 1;
+        hiding = false;
+        TurnOffVisuals();
+        TogglePlayer(true);
+        hidingSpot = "";
+        spotTransform = null;
     }
 }

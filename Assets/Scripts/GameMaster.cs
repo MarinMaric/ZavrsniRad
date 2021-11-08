@@ -7,19 +7,30 @@ public class GameMaster : MonoBehaviour
     [SerializeField]
     HidingController playerHidingScript;
     [SerializeField]
+    CombatController playerCombatScript;
+    [SerializeField]
     EnemyController robotController;
+
     GridGenerator gridGenerator;
+    Recorder recorder;
     public float teleportDistance;
 
+    Vector3 robotStart, playerStart;
+    
     void Awake()
     {
+        robotStart = robotController.transform.position;
+        playerStart = playerHidingScript.transform.position;
+
         gridGenerator = GetComponent<GridGenerator>();
+        recorder = GetComponent<Recorder>();
     }
 
     void Update()
     {
         CheckPlayerNoise();
         CheckTeleport();
+        CheckHealths();
     }
 
     void CheckPlayerNoise()
@@ -58,14 +69,76 @@ public class GameMaster : MonoBehaviour
                 robotController.activeRoom = c.index;
 
                 robotController.backtracking = true;
+
+                //Set target position to itself so that the Select Point node will tell the Pathfinder to find a new path
+                robot.GetComponent<RobotMotor>().targetPosition = robot.position;
+                //But for that to work, the spawnpoint needs to be set so that the Grid Generator can do it's thing
+                GetComponent<GridGenerator>().ChangeSpawnPoint(c.index-1);
+
+                break;
             }
         }
 
-        //Set target position to itself so that the Select Point node will tell the Pathfinder to find a new path
-        robot.GetComponent<RobotMotor>().targetPosition = robot.position;
-        //But for that to work, the spawnpoint needs to be set so that the Grid Generator can do it's thing
-        GetComponent<GridGenerator>().ChangeSpawnPoint(0);
-
         robotController.gameObject.SetActive(true);
+    }
+
+    void CheckHealths()
+    {
+        if (playerCombatScript.health <= 0)
+        {
+            playerCombatScript.gameObject.SetActive(false);
+            ResetLevel();
+        }
+        if (robotController.health <= 0)
+        {
+            robotController.gameObject.SetActive(false);
+
+            //Reset the level but also store the recorded moves to be used later
+            recorder.SaveProgress();
+            ResetLevel();
+        }
+    }
+    
+    void ResetLevel()
+    {
+        //Return AI and player to original positions
+        robotController.transform.position = robotStart;
+        playerHidingScript.transform.position = playerStart;
+
+        //Reset active rooms
+        playerHidingScript.currentRoom = 1;
+        robotController.activeRoom = 1;
+
+        //Reset AI variables
+        robotController.health = 100;
+        robotController.killedPlayer = false;
+        robotController.beganChasing = false;
+        robotController.detectedPlayer = false;
+        robotController.gameObject.GetComponent<RobotMotor>().targetPosition = robotStart;
+
+        //Reset player variables
+        playerCombatScript.ResetPlayer();
+        playerHidingScript.ResetPlayer();
+
+        //Reset all points
+        var points = FindObjectsOfType<PointControl>();
+        foreach (var p in points)
+        {
+            p.visited = false;
+        }
+
+        //Reset grid changers
+        foreach (var changer in gridGenerator.changeTriggers) 
+        {
+            changer.playerPassed = false;
+            changer.robotPassed = false;
+        }
+
+        //Change to first spawn point
+        gridGenerator.ChangeSpawnPoint(0);
+
+        //Reactivate them both
+        robotController.gameObject.SetActive(true);
+        playerHidingScript.gameObject.SetActive(true);
     }
 }

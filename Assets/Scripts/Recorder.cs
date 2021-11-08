@@ -8,25 +8,27 @@ using UnityEngine;
 public class Recorder : MonoBehaviour
 {
     [SerializeField]
-    PriorityList priorities;
+    StoredContents storedInfo;
     string filePath;
 
     void Awake()
     {
         filePath = Application.dataPath + "/progress.json";
         LoadPriorities();
+
+        FindObjectOfType<CombatController>().dealtDamageEvent += IncreaseImmunity;
     }
 
     private void Start()
     {
-        //FindObjectOfType<PlayerTriggersControl>().hideEvent += IncreasePriority;
+        FindObjectOfType<HidingController>().hideEvent += IncreasePriority;
     }
 
     public List<string> GetPriorities()
     {
-        List<Priority> list = new List<Priority>();
+        List<StoredItem> list = new List<StoredItem>();
 
-        foreach (var p in priorities.list)
+        foreach (var p in storedInfo.priorities)
         {
             if (p.Value > 0)
             {
@@ -39,11 +41,28 @@ public class Recorder : MonoBehaviour
         return namesList;
     }
 
+    public Dictionary<string, int> GetImmunities()
+    {
+        Dictionary<string, int> immunities = new Dictionary<string, int>();
+
+        foreach (var i in storedInfo.immunities)
+        {
+            immunities.Add(i.Name, i.Value);
+        }
+
+        return immunities;
+    }
+
     public void IncreasePriority(string tag)
     {
         Debug.Log("Increased " + tag + " by 1.");
-        priorities.list.Where(x => x.Name == tag).First().Value++;
-        SavePriorities();
+        storedInfo.priorities.Where(x => x.Name == tag).First().Value++;
+    }
+
+    public void IncreaseImmunity(Item weapon)
+    {
+        Debug.Log("Increased immunity to " + weapon.name + " by 4%");
+        storedInfo.immunities.Where(x => x.Name == weapon.name).First().Value+=4;
     }
 
     public void LoadPriorities()
@@ -51,36 +70,45 @@ public class Recorder : MonoBehaviour
         if (File.Exists(filePath))
         {
             string progressJson = File.ReadAllText(filePath);
-            priorities = JsonUtility.FromJson<PriorityList>(progressJson);
+            storedInfo = JsonUtility.FromJson<StoredContents>(progressJson);
         }
         else
         {
-            priorities.list = new List<Priority>()
+            storedInfo = new StoredContents();
+            storedInfo.priorities = new List<StoredItem>()
             {
-                new Priority{Name="Vent", Value=0 },
-                new Priority{Name="Closet", Value=0},
-                new Priority{Name="Under", Value = 0 },
-                new Priority{Name="Normal", Value =1},
+                new StoredItem{Name="Vent", Value=0 },
+                new StoredItem{Name="Closet", Value=0},
+                new StoredItem{Name="Under", Value = 0 },
+                new StoredItem{Name="Normal", Value =1}
+            };
+            storedInfo.immunities = new List<StoredItem>() {
+                new StoredItem{Name="Flamethrower", Value=0 },
+                new StoredItem{Name="Shotgun", Value=0},
+                new StoredItem{Name="Landmine", Value = 0 },
+                new StoredItem{Name="Magnet", Value = 0},
+                new StoredItem{Name="SlowDown", Value =0}
             };
         }
     }
 
-    public void SavePriorities()
+    public void SaveProgress()
     {
-        string prioritiesJson = JsonUtility.ToJson(priorities);
-        File.WriteAllText(filePath, prioritiesJson);
+        string progressJson = JsonUtility.ToJson(storedInfo);
+        File.WriteAllText(filePath, progressJson);
     }
 }
 
 [Serializable]
-public class Priority
+public class StoredItem
 {
     public string Name;
     public int Value;
 }
 
 [Serializable]
-public class PriorityList
+public class StoredContents
 {
-    public List<Priority> list;
+    public List<StoredItem> priorities;
+    public List<StoredItem> immunities;
 }

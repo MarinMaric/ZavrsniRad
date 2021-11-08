@@ -6,7 +6,7 @@ public class GridChanger : MonoBehaviour
 {
     public int index;
     public bool robotPassed = false;
-    private bool playerPassed = false;
+    public bool playerPassed = false;
 
     public delegate void ChangeSpawn(int i);
     public event ChangeSpawn changeEvent, clearEvent;

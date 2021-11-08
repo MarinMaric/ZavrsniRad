@@ -26,11 +26,20 @@ public class CombatController : MonoBehaviour
     public LayerMask itemLayer;
     ItemTrigger targetedItem;
 
+    public delegate void DealtDamage(Item weapon);
+    public event DealtDamage dealtDamageEvent;
+
     EnemyController enemyScript;
+    public string EquippedWeapon { 
+        get {
+            return inventory[equippedIndex].name;        
+        } 
+    }
 
     void Start()
     {
         enemyScript = FindObjectOfType<EnemyController>();
+
 
         combatControls = new PlayerTriggers();
         combatControls.Enable();
@@ -58,6 +67,14 @@ public class CombatController : MonoBehaviour
 
         combatControls.Combat.Shoot.started -= ctx => Fire(true);
         combatControls.Combat.Shoot.canceled -= ctx => Fire(false);
+
+        for (int i = 0; i < 6; i++)
+        {
+            if (inventory[i] != null)
+            {
+                inventory[i].currentAmmo = inventory[i].totalAmmo;
+            }
+        }
     }
 
     private void Update()
@@ -177,7 +194,10 @@ public class CombatController : MonoBehaviour
     IEnumerator DealDamage()
     {
         fired = true;
-        enemyScript.health -= inventory[equippedIndex].damage;
+
+        //Send signal to enemy to increase priority
+        dealtDamageEvent.Invoke(inventory[equippedIndex]);
+
         yield return new WaitForSeconds(inventory[equippedIndex].delay);
         fired = false;
     }
@@ -216,19 +236,36 @@ public class CombatController : MonoBehaviour
 
     void Explode()
     {
-        enemyScript.health -= inventory[equippedIndex].damage;
+        SendSignal("Landmine");
     }
 
     void SlowDown()
     {
         enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed /= 5f;
+        SendSignal("SlowDown");
         StartCoroutine(RestoreSpeed());
     }
 
     void Stop()
     {
         enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 0f;
+        SendSignal("Magnet");
         StartCoroutine(StartMoving());
+    }
+
+    void SendSignal(string weaponName)
+    {
+        Item weapon;
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i].name == weaponName)
+            {
+                weapon = inventory[i];
+                dealtDamageEvent.Invoke(weapon);
+                break;
+            }
+        }
     }
 
     IEnumerator RestoreSpeed() {
@@ -267,14 +304,11 @@ public class CombatController : MonoBehaviour
         effects[0].Stop();
     }
 
-    private void OnDestroy()
+    public void ResetPlayer()
     {
-        for (int i = 0; i < 6; i++)
-        {
-            if (inventory[i] != null)
-            {
-                inventory[i].currentAmmo = inventory[i].totalAmmo;
-            }
-        }
+        health = 100;
+        inventory = new Item[6];
+        equippedIndex = -1;
+        weaponIcons.Clear();
     }
 }
