@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameMaster : MonoBehaviour
@@ -16,7 +17,12 @@ public class GameMaster : MonoBehaviour
     public float teleportDistance;
 
     Vector3 robotStart, playerStart;
-    
+
+    [SerializeField]
+    List<GameObject> pickups;
+    [SerializeField]
+    List<Transform> dropPoints;
+
     void Awake()
     {
         robotStart = robotController.transform.position;
@@ -26,11 +32,44 @@ public class GameMaster : MonoBehaviour
         recorder = GetComponent<Recorder>();
     }
 
+    private void Start()
+    {
+        GenerateDrops();
+    }
+
     void Update()
     {
         CheckPlayerNoise();
         CheckTeleport();
         CheckHealths();
+    }
+
+    void GenerateDrops()
+    {
+        var listShuffled = pickups.OrderBy(x => Random.value).ToArray();
+
+        for (int i = 0; i < dropPoints.Count; i++)
+        {
+            var item = Instantiate(listShuffled[i], dropPoints[i].position, dropPoints[i].rotation);
+            item.GetComponent<ItemTrigger>().graphics = SetGraphics(item.name);
+        }
+    }
+
+    Transform SetGraphics(string itemName)
+    {
+        List<string> names = new List<string>(){ "Flamethrower", "Shotgun", "Bomb", "Magnet", "Slowdown", "Heal" };
+        var graphics = FindObjectOfType<CombatController>().transform.GetChild(0).GetChild(0);
+
+        foreach (var n in names)
+        {
+            if (itemName.Contains(n))
+            {
+                var visuals = graphics.Find(n);
+                return visuals;
+            }
+        }
+
+        return null;
     }
 
     void CheckPlayerNoise()
@@ -130,7 +169,6 @@ public class GameMaster : MonoBehaviour
         //Reset grid changers
         foreach (var changer in gridGenerator.changeTriggers) 
         {
-            changer.playerPassed = false;
             changer.robotPassed = false;
         }
 

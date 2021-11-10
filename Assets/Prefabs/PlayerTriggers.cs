@@ -41,6 +41,14 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""GoingBackwards"",
+                    ""type"": ""Button"",
+                    ""id"": ""f35c2f21-27bf-4852-ada0-90790fdeecd0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -184,6 +192,39 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                     ""processors"": ""StickDeadzone"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""MoveDetector"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""406ba692-b78f-4812-a9ee-18acb178cab4"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""GoingBackwards"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab29134e-c712-4731-bbf3-541f25e727fc"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""GoingBackwards"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""02cfe646-b972-4107-98b5-ae3d206f4adb"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""GoingBackwards"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -462,6 +503,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         m_DummyPlayer_HideTest = m_DummyPlayer.FindAction("HideTest", throwIfNotFound: true);
         m_DummyPlayer_Sneak = m_DummyPlayer.FindAction("Sneak", throwIfNotFound: true);
         m_DummyPlayer_MoveDetector = m_DummyPlayer.FindAction("MoveDetector", throwIfNotFound: true);
+        m_DummyPlayer_GoingBackwards = m_DummyPlayer.FindAction("GoingBackwards", throwIfNotFound: true);
         // Combat
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_Primary = m_Combat.FindAction("Primary", throwIfNotFound: true);
@@ -524,6 +566,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
     private readonly InputAction m_DummyPlayer_HideTest;
     private readonly InputAction m_DummyPlayer_Sneak;
     private readonly InputAction m_DummyPlayer_MoveDetector;
+    private readonly InputAction m_DummyPlayer_GoingBackwards;
     public struct DummyPlayerActions
     {
         private @PlayerTriggers m_Wrapper;
@@ -531,6 +574,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         public InputAction @HideTest => m_Wrapper.m_DummyPlayer_HideTest;
         public InputAction @Sneak => m_Wrapper.m_DummyPlayer_Sneak;
         public InputAction @MoveDetector => m_Wrapper.m_DummyPlayer_MoveDetector;
+        public InputAction @GoingBackwards => m_Wrapper.m_DummyPlayer_GoingBackwards;
         public InputActionMap Get() { return m_Wrapper.m_DummyPlayer; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -549,6 +593,9 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 @MoveDetector.started -= m_Wrapper.m_DummyPlayerActionsCallbackInterface.OnMoveDetector;
                 @MoveDetector.performed -= m_Wrapper.m_DummyPlayerActionsCallbackInterface.OnMoveDetector;
                 @MoveDetector.canceled -= m_Wrapper.m_DummyPlayerActionsCallbackInterface.OnMoveDetector;
+                @GoingBackwards.started -= m_Wrapper.m_DummyPlayerActionsCallbackInterface.OnGoingBackwards;
+                @GoingBackwards.performed -= m_Wrapper.m_DummyPlayerActionsCallbackInterface.OnGoingBackwards;
+                @GoingBackwards.canceled -= m_Wrapper.m_DummyPlayerActionsCallbackInterface.OnGoingBackwards;
             }
             m_Wrapper.m_DummyPlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -562,6 +609,9 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
                 @MoveDetector.started += instance.OnMoveDetector;
                 @MoveDetector.performed += instance.OnMoveDetector;
                 @MoveDetector.canceled += instance.OnMoveDetector;
+                @GoingBackwards.started += instance.OnGoingBackwards;
+                @GoingBackwards.performed += instance.OnGoingBackwards;
+                @GoingBackwards.canceled += instance.OnGoingBackwards;
             }
         }
     }
@@ -678,6 +728,7 @@ public class @PlayerTriggers : IInputActionCollection, IDisposable
         void OnHideTest(InputAction.CallbackContext context);
         void OnSneak(InputAction.CallbackContext context);
         void OnMoveDetector(InputAction.CallbackContext context);
+        void OnGoingBackwards(InputAction.CallbackContext context);
     }
     public interface ICombatActions
     {

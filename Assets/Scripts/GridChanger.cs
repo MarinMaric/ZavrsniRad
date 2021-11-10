@@ -6,7 +6,6 @@ public class GridChanger : MonoBehaviour
 {
     public int index;
     public bool robotPassed = false;
-    public bool playerPassed = false;
 
     public delegate void ChangeSpawn(int i);
     public event ChangeSpawn changeEvent, clearEvent;
@@ -15,8 +14,16 @@ public class GridChanger : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            other.transform.GetComponent<HidingController>().currentRoom += playerPassed ? -1 : 1;
-            playerPassed = !playerPassed;
+            var hidingScript = other.transform.GetComponent<HidingController>();
+
+            if (GoingIn(hidingScript.movementVector, other.transform))
+            {
+                hidingScript.currentRoom = index;
+            }
+            else 
+            {
+                hidingScript.currentRoom = index + 1;
+            } 
         }
         if (other.tag=="Robot")
         {
@@ -37,6 +44,24 @@ public class GridChanger : MonoBehaviour
             }
         }
     }
+
+    bool GoingIn(Vector2 movement, Transform player)
+    {
+
+        if((movement.y > 0 && Vector3.Angle(player.forward, transform.forward) <= 60f)
+            || (movement.y < 0 && Vector3.Angle(-player.forward, transform.forward) <= 60f) )
+        {
+            return true;
+        }
+        else if((movement.x > 0 && Vector3.Angle(player.right, transform.forward) <= 60f)
+            || (movement.x < 0 && Vector3.Angle(-player.right, transform.forward) <= 60f))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 
     private void OnTriggerExit(Collider other)
     {

@@ -19,6 +19,10 @@ public class HidingController : MonoBehaviour
     public string hidingSpot;
     Transform spotTransform;
     public bool sneaking, moving;
+    [HideInInspector]
+    public bool backwards;
+    [HideInInspector]
+    public Vector2 movementVector;
 
     public GameObject hideText, leaveText;
     PlayerTriggers playerTriggers;
@@ -38,12 +42,15 @@ public class HidingController : MonoBehaviour
         playerTriggers = new PlayerTriggers();
         playerTriggers.Enable();
         playerTriggers.DummyPlayer.HideTest.performed += ctx => Hide();
-     
+
         playerTriggers.DummyPlayer.Sneak.started += ctx => Sneak(true);
         playerTriggers.DummyPlayer.Sneak.canceled += ctx => Sneak(false);
 
         playerTriggers.DummyPlayer.MoveDetector.started += ctx => Moving(true);
         playerTriggers.DummyPlayer.MoveDetector.canceled += ctx => Moving(false);
+        playerTriggers.DummyPlayer.GoingBackwards.started += ctx => Backwards(true);
+        playerTriggers.DummyPlayer.GoingBackwards.canceled += ctx => Backwards(false);
+
 
         ventRotationOG = ventVisual.rotation;
         closetRotationOG = closetVisual.rotation;
@@ -60,10 +67,16 @@ public class HidingController : MonoBehaviour
 
         playerTriggers.DummyPlayer.MoveDetector.started -= ctx => Moving(true);
         playerTriggers.DummyPlayer.MoveDetector.canceled -= ctx => Moving(false);
+
+        playerTriggers.DummyPlayer.GoingBackwards.started -= ctx => Backwards(true);
+        playerTriggers.DummyPlayer.GoingBackwards.canceled -= ctx => Backwards(false);
     }
 
     void Update()
     {
+        movementVector = playerTriggers.DummyPlayer.MoveDetector.ReadValue<Vector2>();
+        Debug.Log(movementVector);
+
         if (!hiding)
         {
             CheckAvailability();
@@ -187,6 +200,12 @@ public class HidingController : MonoBehaviour
     void Moving(bool toggle)
     {
         moving = toggle;
+        
+    }
+
+    void Backwards(bool toggle)
+    {
+        backwards = toggle;
     }
 
     IEnumerator KeepSafe()

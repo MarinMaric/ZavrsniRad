@@ -296,10 +296,12 @@ public class CombatController : MonoBehaviour
         else if (inventory[equippedIndex].name == "Shotgun")
         {
             effects[1].Play();
+            Animator anim = transform.GetChild(0).GetChild(0).Find("Shotgun").GetComponent<Animator>();
+            anim.SetBool("Fire", true);
         }
     }
 
-    void TurnOffEffects()
+    public void TurnOffEffects()
     {
         effects[0].Stop();
     }
