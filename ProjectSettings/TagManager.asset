@@ -11,6 +11,7 @@ TagManager:
   - Robot
   - Exit
   - CinemachineTarget
+  - Back
   layers:
   - Default
   - TransparentFX

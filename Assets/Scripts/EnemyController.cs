@@ -90,7 +90,7 @@ public class EnemyController : MonoBehaviour
             {
 
                 //if all the points in the room have been checked then mark the whole room as checked
-                checkedRooms.Add(activeRoom);
+                //checkedRooms.Add(activeRoom);
 
                 //prepare priority for next room
                 priorityIndex = -1;
@@ -99,8 +99,16 @@ public class EnemyController : MonoBehaviour
                 foreach (var h in hits)
                 {
                     //h.collider.GetComponent<PointControl>().visited = false;
-                    if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId == activeRoom && h.collider.GetComponent<PointControl>().visited == false)
-                        points.Add(h.collider.GetComponent<PointControl>());
+                    if (!backtracking)
+                    {
+                        if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId == activeRoom && h.collider.GetComponent<PointControl>().visited == false)
+                            points.Add(h.collider.GetComponent<PointControl>());
+                    }
+                    else
+                    {
+                        if (h.collider.tag == "Back" && h.collider.GetComponent<PointControl>().roomId == activeRoom)
+                            points.Add(h.collider.GetComponent<PointControl>());
+                    }
                 }
 
                 if (points.Count > 0)
@@ -111,13 +119,13 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     //since there are no more rooms switch to backtracking mode
-                    foreach (var h in hits)
-                    {
-                        if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId == activeRoom-1)
-                        {
-                            points.Add(h.collider.GetComponent<PointControl>());
-                        }
-                    }
+                    //foreach (var h in hits)
+                    //{
+                    //    if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId == activeRoom-1)
+                    //    {
+                    //        points.Add(h.collider.GetComponent<PointControl>());
+                    //    }
+                    //}
                 }
                 //else
                 //{
@@ -267,7 +275,7 @@ public class EnemyController : MonoBehaviour
     {
         if (weapon.damage > 0)
         {
-            health -= (weapon.damage - weapon.damage * immunities[weapon.name] / 100);
+            health -= Mathf.Abs(weapon.damage - weapon.damage * immunities[weapon.name] / 100);
         }
     }
 

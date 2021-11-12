@@ -72,10 +72,15 @@ public class HidingController : MonoBehaviour
         playerTriggers.DummyPlayer.GoingBackwards.canceled -= ctx => Backwards(false);
     }
 
+    //private void Start()
+    //{
+    //    //TESTING ONLY
+    //    gameObject.SetActive(false);
+    //}
+
     void Update()
     {
         movementVector = playerTriggers.DummyPlayer.MoveDetector.ReadValue<Vector2>();
-        Debug.Log(movementVector);
 
         if (!hiding)
         {

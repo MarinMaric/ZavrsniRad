@@ -86,8 +86,12 @@ public class GameMaster : MonoBehaviour
         int roomDiff = Mathf.Abs(playerHidingScript.currentRoom - robotController.activeRoom);
         int randomCriteria = Random.Range(2, 6);
 
-        if (roomDiff >= randomCriteria)
-           Teleport();
+        if (roomDiff >= randomCriteria && playerHidingScript.currentRoom > robotController.activeRoom)
+            Teleport();
+        else if (roomDiff >= randomCriteria && playerHidingScript.currentRoom < robotController.activeRoom) 
+            Backtrack();
+        else if (robotController.backtracking && robotController.activeRoom == 1)
+            robotController.backtracking = false;
     }
 
     void Teleport()
@@ -98,16 +102,14 @@ public class GameMaster : MonoBehaviour
        
         foreach(var c in gridGenerator.changeTriggers)
         {
-            if (c.index == playerHidingScript.currentRoom)
+            if (c.index == playerHidingScript.currentRoom-1) //For the changer 1 room prior to the player
             {
-                //Put player behind the grid changer
+                //Put robot behind the grid changer
                 Vector3 behindDoor = c.transform.position - c.transform.forward * teleportDistance;
                 robot.position = behindDoor;
 
                 //Set up room and backtracking
                 robotController.activeRoom = c.index;
-
-                robotController.backtracking = true;
 
                 //Set target position to itself so that the Select Point node will tell the Pathfinder to find a new path
                 robot.GetComponent<RobotMotor>().targetPosition = robot.position;
@@ -119,6 +121,11 @@ public class GameMaster : MonoBehaviour
         }
 
         robotController.gameObject.SetActive(true);
+    }
+
+    void Backtrack()
+    {
+        robotController.backtracking = true;
     }
 
     void CheckHealths()

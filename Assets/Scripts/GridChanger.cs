@@ -29,31 +29,103 @@ public class GridChanger : MonoBehaviour
         {
             var enemyController = FindObjectOfType<EnemyController>();
 
-            if (!robotPassed)
+            if (GoingIn(other.transform))
             {
-                changeEvent(index);
-                robotPassed = true;
-                enemyController.activeRoom++;
+                changeEvent(index-1);
+                enemyController.activeRoom = index;
             }
             else
             {
-                changeEvent(index - 1);
-                robotPassed = false;
-                if (!enemyController.backtracking)
-                    enemyController.activeRoom--;
+                changeEvent(index);
+                enemyController.activeRoom = index + 1;
             }
+
+            #region old system
+            //if (!robotPassed)
+            //{
+            //    changeEvent(index);
+            //    robotPassed = true;
+            //    enemyController.activeRoom++;
+            //}
+            //else
+            //{
+            //    changeEvent(index - 1);
+            //    robotPassed = false;
+            //    if (!enemyController.backtracking)
+            //        enemyController.activeRoom--;
+            //}
+            #endregion
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Robot")
+        {
+            var enemyController = FindObjectOfType<EnemyController>();
+
+            if (GoingIn(other.transform)) {
+                if (enemyController.activeRoom != index)
+                {
+                    changeEvent(index - 1);
+                    enemyController.activeRoom = index;
+                }
+            }
+            else
+            {
+                if (enemyController.activeRoom != index+1)
+                {
+                    changeEvent(index);
+                    enemyController.activeRoom = index + 1;
+                }
+            }
+
+            #region old system
+            //HACKING TEST
+            //if (!enemyController.backtracking)
+            //{
+            //    if (enemyController.activeRoom != index + 1)
+            //    {
+            //        if (!robotPassed)
+            //        {
+            //            changeEvent(index);
+            //            robotPassed = true;
+            //            FindObjectOfType<EnemyController>().activeRoom++;
+            //        }
+            //        else
+            //        {
+            //            changeEvent(index - 1);
+            //            robotPassed = false;
+            //            FindObjectOfType<EnemyController>().activeRoom--;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    enemyController.backtracking = false;
+
+            //    clearEvent.Invoke(index);
+            //}
+            ////else
+            ////{
+            ////    if (robotPassed)
+            ////    {
+            ////        changeEvent(index - 1);
+            ////        robotPassed = false;
+            ////    }
+            ////}
+            #endregion
         }
     }
 
     bool GoingIn(Vector2 movement, Transform player)
     {
-
-        if((movement.y > 0 && Vector3.Angle(player.forward, transform.forward) <= 60f)
-            || (movement.y < 0 && Vector3.Angle(-player.forward, transform.forward) <= 60f) )
+        if ((movement.y > 0 && Vector3.Angle(player.forward, transform.forward) <= 60f)
+            || (movement.y < 0 && Vector3.Angle(-player.forward, transform.forward) <= 60f))
         {
             return true;
         }
-        else if((movement.x > 0 && Vector3.Angle(player.right, transform.forward) <= 60f)
+        else if ((movement.x > 0 && Vector3.Angle(player.right, transform.forward) <= 60f)
             || (movement.x < 0 && Vector3.Angle(-player.right, transform.forward) <= 60f))
         {
             return true;
@@ -62,46 +134,11 @@ public class GridChanger : MonoBehaviour
         return false;
     }
 
-
-    private void OnTriggerExit(Collider other)
+    bool GoingIn(Transform robot)
     {
-        if (other.tag == "Robot")
-        {
-            var enemyController = FindObjectOfType<EnemyController>();
-
-            //HACKING TEST
-            if (!enemyController.backtracking)
-            {
-                if (enemyController.activeRoom != index + 1)
-                {
-                    if (!robotPassed)
-                    {
-                        changeEvent(index);
-                        robotPassed = true;
-                        FindObjectOfType<EnemyController>().activeRoom++;
-                    }
-                    else
-                    {
-                        changeEvent(index - 1);
-                        robotPassed = false;
-                        FindObjectOfType<EnemyController>().activeRoom--;
-                    }
-                }
-            }
-            else
-            {
-                enemyController.backtracking = false;
-
-                clearEvent.Invoke(index);
-            }
-            //else
-            //{
-            //    if (robotPassed)
-            //    {
-            //        changeEvent(index - 1);
-            //        robotPassed = false;
-            //    }
-            //}
-        }
+        if (Vector3.Angle(robot.forward, transform.forward) <= 90)
+            return true;
+        else
+            return false;
     }
 }

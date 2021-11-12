@@ -50,9 +50,6 @@ public class CombatController : MonoBehaviour
         combatControls.Combat.PassiveSecondary.performed += ctx => EquipItem(3);
         combatControls.Combat.PassiveThird.performed += ctx => EquipItem(4);
         combatControls.Combat.Heal.performed += ctx => EquipItem(5);
-
-        combatControls.Combat.Shoot.started += ctx => Fire(true);
-        combatControls.Combat.Shoot.canceled += ctx => Fire(false);
     }
 
     private void OnDisable()
@@ -65,8 +62,8 @@ public class CombatController : MonoBehaviour
         combatControls.Combat.PassiveThird.performed -= ctx => EquipItem(4);
         combatControls.Combat.Heal.performed -= ctx => EquipItem(5);
 
-        combatControls.Combat.Shoot.started -= ctx => Fire(true);
-        combatControls.Combat.Shoot.canceled -= ctx => Fire(false);
+        combatControls.Combat.Shoot.started -= ctx => FireContinuous(true);
+        combatControls.Combat.Shoot.canceled -= ctx => FireContinuous(false);
 
         for (int i = 0; i < 6; i++)
         {
@@ -96,7 +93,9 @@ public class CombatController : MonoBehaviour
 
                 if (inventory[equippedIndex].itemType == ItemType.Firearm && AimForEnemy())
                 {
-                    StartCoroutine(DealDamage());
+                    if (inventory[equippedIndex].name == "Flamethrower")
+                        StartCoroutine(DealDamage());
+                    else DealDamageInstant();
                 }
                 else if (inventory[equippedIndex].itemType == ItemType.Passive)
                 {
@@ -173,14 +172,47 @@ public class CombatController : MonoBehaviour
         }
         else if(inventory[index]!=null)
         {
-            if(equippedIndex!=-1)
+            if (equippedIndex != -1)
+            {
                 inventory[equippedIndex].graphics.gameObject.SetActive(false);
+
+                //Remap controls
+                if (inventory[index].name == "Flamethrower")
+                {
+                    combatControls.Combat.Shoot.performed -= ctx => Fire();
+                    combatControls.Combat.Shoot.started += ctx => FireContinuous(true);
+                    combatControls.Combat.Shoot.canceled += ctx => FireContinuous(false);
+                }
+                else 
+                {
+                    combatControls.Combat.Shoot.performed += ctx => Fire();
+
+                    if (inventory[equippedIndex].name == "Flamethrower")
+                    {
+                        combatControls.Combat.Shoot.started -= ctx => FireContinuous(true);
+                        combatControls.Combat.Shoot.canceled -= ctx => FireContinuous(false);
+                    }
+                }
+            }
+            else
+            {
+                if (inventory[index].name == "Flamethrower")
+                {
+                    combatControls.Combat.Shoot.started += ctx => FireContinuous(true);
+                    combatControls.Combat.Shoot.canceled += ctx => FireContinuous(false);
+                }
+                else
+                {
+                    combatControls.Combat.Shoot.performed += ctx => Fire();
+                }
+            }
+
             inventory[index].graphics.gameObject.SetActive(true);
             equippedIndex = index;
         }
     }
 
-    void Fire(bool toggle)
+    void FireContinuous(bool toggle)
     {
         if(equippedIndex!=-1)
             firing = toggle;
@@ -189,6 +221,12 @@ public class CombatController : MonoBehaviour
         {
             TurnOffEffects();
         }
+    }
+
+    void Fire()
+    {
+        if (equippedIndex != -1)
+            firing = true;
     }
 
     IEnumerator DealDamage()
@@ -200,6 +238,11 @@ public class CombatController : MonoBehaviour
 
         yield return new WaitForSeconds(inventory[equippedIndex].delay);
         fired = false;
+    }
+
+    void DealDamageInstant()
+    {
+        dealtDamageEvent.Invoke(inventory[equippedIndex]);
     }
 
     void Plant()
@@ -298,6 +341,7 @@ public class CombatController : MonoBehaviour
             effects[1].Play();
             Animator anim = transform.GetChild(0).GetChild(0).Find("Shotgun").GetComponent<Animator>();
             anim.SetBool("Fire", true);
+            firing = false;
         }
     }
 
