@@ -81,13 +81,11 @@ public class EnemyController : MonoBehaviour
                 points.RemoveAt(index);
                 resetPathEvent.Invoke();
             }
-            //HACKING TEST
-            //else
-            //{
-            //    SceneManager.LoadScene(0);
-            //}
-            else
+            else if (priorityIndex == priorities.Count - 1)
             {
+                //TEST ONLY
+                if(activeRoom==9)
+                    SceneManager.LoadScene(0);
 
                 //if all the points in the room have been checked then mark the whole room as checked
                 //checkedRooms.Add(activeRoom);
@@ -127,11 +125,6 @@ public class EnemyController : MonoBehaviour
                     //    }
                     //}
                 }
-                //else
-                //{
-                //    //HACKING TEST
-                //    SceneManager.LoadScene(0);
-                //}
             }
         }
 

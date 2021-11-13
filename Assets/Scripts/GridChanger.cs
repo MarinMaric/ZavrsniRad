@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GridChanger : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class GridChanger : MonoBehaviour
         if (other.tag=="Robot")
         {
             var enemyController = FindObjectOfType<EnemyController>();
+
+            //TEST TELEPORT
+            //if (index == enemyController.activeRoom)
+            //    SceneManager.LoadScene(0);
 
             if (GoingIn(other.transform))
             {

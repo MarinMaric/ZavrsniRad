@@ -35,6 +35,7 @@ public class GameMaster : MonoBehaviour
     private void Start()
     {
         GenerateDrops();
+        //StartCoroutine(TestTeleport());
     }
 
     void Update()
@@ -42,6 +43,12 @@ public class GameMaster : MonoBehaviour
         CheckPlayerNoise();
         CheckTeleport();
         CheckHealths();
+    }
+
+    IEnumerator TestTeleport()
+    {
+        yield return new WaitForSeconds(1);
+        playerHidingScript.currentRoom = 6;
     }
 
     void GenerateDrops()
@@ -102,19 +109,19 @@ public class GameMaster : MonoBehaviour
        
         foreach(var c in gridGenerator.changeTriggers)
         {
-            if (c.index == playerHidingScript.currentRoom-1) //For the changer 1 room prior to the player
+            if (c.index == playerHidingScript.currentRoom-2) //For the changer 1 room prior to the player
             {
                 //Put robot behind the grid changer
                 Vector3 behindDoor = c.transform.position - c.transform.forward * teleportDistance;
                 robot.position = behindDoor;
 
-                //Set up room and backtracking
-                robotController.activeRoom = c.index;
+                //Set active room to be the one to which this door serves as an exit to prior
+                robotController.activeRoom = c.index+1;
 
                 //Set target position to itself so that the Select Point node will tell the Pathfinder to find a new path
                 robot.GetComponent<RobotMotor>().targetPosition = robot.position;
                 //But for that to work, the spawnpoint needs to be set so that the Grid Generator can do it's thing
-                GetComponent<GridGenerator>().ChangeSpawnPoint(c.index-1);
+                GetComponent<GridGenerator>().ChangeSpawnPoint(c.index);
 
                 break;
             }
@@ -125,7 +132,9 @@ public class GameMaster : MonoBehaviour
 
     void Backtrack()
     {
-        robotController.backtracking = true;
+        //robotController.backtracking = true;
+        //TEST ONLY
+        playerHidingScript.currentRoom = robotController.activeRoom;
     }
 
     void CheckHealths()

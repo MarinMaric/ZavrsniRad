@@ -72,11 +72,11 @@ public class HidingController : MonoBehaviour
         playerTriggers.DummyPlayer.GoingBackwards.canceled -= ctx => Backwards(false);
     }
 
-    //private void Start()
-    //{
-    //    //TESTING ONLY
-    //    gameObject.SetActive(false);
-    //}
+    private void Start()
+    {
+        //TESTING ONLY
+        gameObject.SetActive(false);
+    }
 
     void Update()
     {
