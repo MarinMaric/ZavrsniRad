@@ -84,8 +84,8 @@ public class EnemyController : MonoBehaviour
             else if (priorityIndex == priorities.Count - 1)
             {
                 //TEST ONLY
-                if(activeRoom==9)
-                    SceneManager.LoadScene(0);
+                //if(activeRoom==9)
+                //    SceneManager.LoadScene(0);
 
                 //if all the points in the room have been checked then mark the whole room as checked
                 //checkedRooms.Add(activeRoom);
@@ -193,10 +193,29 @@ public class EnemyController : MonoBehaviour
 
     public NodeState ChasePlayer()
     {
-        if (FindObjectOfType<HidingController>().hiding && !priorities.Contains(FindObjectOfType<HidingController>().hidingSpot))
+        var hc = FindObjectOfType<HidingController>();
+        if (hc.hiding && !priorities.Contains(FindObjectOfType<HidingController>().hidingSpot))
         {
             beganChasing = false;
             detectedPlayer = false;
+
+            if (hc.currentRoom == activeRoom)
+            {
+                targetPosition = transform;
+            }
+            else
+            {
+                GameObject[] exitPoints = GameObject.FindGameObjectsWithTag("Exit");
+                foreach(var p in exitPoints)
+                {
+                    if (p.GetComponent<PointControl>().roomId == activeRoom)
+                    {
+                        targetPosition = p.transform;
+                        break;
+                    }
+                }
+            }
+
             resetPathEvent.Invoke();
             return NodeState.FAILURE;
         }

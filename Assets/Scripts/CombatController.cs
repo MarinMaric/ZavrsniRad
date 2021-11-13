@@ -29,6 +29,8 @@ public class CombatController : MonoBehaviour
     public delegate void DealtDamage(Item weapon);
     public event DealtDamage dealtDamageEvent;
 
+    AudioSource effectAudio;
+
     EnemyController enemyScript;
     public string EquippedWeapon { 
         get {
@@ -182,6 +184,7 @@ public class CombatController : MonoBehaviour
                     combatControls.Combat.Shoot.performed -= ctx => Fire();
                     combatControls.Combat.Shoot.started += ctx => FireContinuous(true);
                     combatControls.Combat.Shoot.canceled += ctx => FireContinuous(false);
+                    effectAudio = inventory[index].graphics.GetComponent<AudioSource>();
                 }
                 else 
                 {
@@ -200,6 +203,7 @@ public class CombatController : MonoBehaviour
                 {
                     combatControls.Combat.Shoot.started += ctx => FireContinuous(true);
                     combatControls.Combat.Shoot.canceled += ctx => FireContinuous(false);
+                    effectAudio = inventory[index].graphics.GetComponent<AudioSource>();
                 }
                 else
                 {
@@ -335,6 +339,10 @@ public class CombatController : MonoBehaviour
         if (inventory[equippedIndex].name == "Flamethrower")
         {
             effects[0].Play();
+            if (!effectAudio.isPlaying)
+            {
+                effectAudio.Play();
+            }
         }
         else if (inventory[equippedIndex].name == "Shotgun")
         {
@@ -348,6 +356,10 @@ public class CombatController : MonoBehaviour
     public void TurnOffEffects()
     {
         effects[0].Stop();
+        if (effectAudio.isPlaying)
+        {
+            effectAudio.Stop();
+        }
     }
 
     public void ResetPlayer()

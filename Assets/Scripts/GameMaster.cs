@@ -11,6 +11,8 @@ public class GameMaster : MonoBehaviour
     CombatController playerCombatScript;
     [SerializeField]
     EnemyController robotController;
+    [SerializeField]
+    AudioSource robotAudio;
 
     GridGenerator gridGenerator;
     Recorder recorder;
@@ -40,6 +42,7 @@ public class GameMaster : MonoBehaviour
 
     void Update()
     {
+        CheckRobotNoise();
         CheckPlayerNoise();
         CheckTeleport();
         CheckHealths();
@@ -88,14 +91,26 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    void CheckRobotNoise()
+    {
+        if (Mathf.Abs(playerHidingScript.currentRoom - robotController.activeRoom) > 1 && !robotAudio.mute)
+        {
+            robotAudio.mute=true;
+        }
+        else if(Mathf.Abs(playerHidingScript.currentRoom - robotController.activeRoom) <= 1 && robotAudio.mute)
+        {
+            robotAudio.mute = false;
+        }
+    }
+
     void CheckTeleport()
     {
         int roomDiff = Mathf.Abs(playerHidingScript.currentRoom - robotController.activeRoom);
         int randomCriteria = Random.Range(2, 6);
 
-        if (roomDiff >= randomCriteria && playerHidingScript.currentRoom > robotController.activeRoom)
+        if (roomDiff >= 2 && playerHidingScript.currentRoom > robotController.activeRoom && !robotController.backtracking)
             Teleport();
-        else if (roomDiff >= randomCriteria && playerHidingScript.currentRoom < robotController.activeRoom) 
+        else if (roomDiff >= 2 && playerHidingScript.currentRoom < robotController.activeRoom) 
             Backtrack();
         else if (robotController.backtracking && robotController.activeRoom == 1)
             robotController.backtracking = false;
@@ -132,9 +147,9 @@ public class GameMaster : MonoBehaviour
 
     void Backtrack()
     {
-        //robotController.backtracking = true;
+        robotController.backtracking = true;
         //TEST ONLY
-        playerHidingScript.currentRoom = robotController.activeRoom;
+        //playerHidingScript.currentRoom = robotController.activeRoom;
     }
 
     void CheckHealths()

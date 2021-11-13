@@ -75,7 +75,7 @@ public class HidingController : MonoBehaviour
     private void Start()
     {
         //TESTING ONLY
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     void Update()
