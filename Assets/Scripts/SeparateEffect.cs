@@ -6,7 +6,8 @@ public class SeparateEffect : MonoBehaviour
 {
     public delegate void Activate();
     public Activate activateFunction;
-    public ParticleSystem effect; 
+    public ParticleSystem effect;
+    public AudioSource audioSrc;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,6 +18,7 @@ public class SeparateEffect : MonoBehaviour
                 effect.Play();
                 GetComponent<MeshRenderer>().enabled = false;
             }
+            audioSrc.Play();
             activateFunction();
         }
     }

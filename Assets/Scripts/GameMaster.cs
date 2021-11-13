@@ -108,9 +108,9 @@ public class GameMaster : MonoBehaviour
         int roomDiff = Mathf.Abs(playerHidingScript.currentRoom - robotController.activeRoom);
         int randomCriteria = Random.Range(2, 6);
 
-        if (roomDiff >= 2 && playerHidingScript.currentRoom > robotController.activeRoom && !robotController.backtracking)
+        if (roomDiff >= randomCriteria && playerHidingScript.currentRoom > robotController.activeRoom && !robotController.backtracking)
             Teleport();
-        else if (roomDiff >= 2 && playerHidingScript.currentRoom < robotController.activeRoom) 
+        else if (roomDiff >= randomCriteria && playerHidingScript.currentRoom < robotController.activeRoom) 
             Backtrack();
         else if (robotController.backtracking && robotController.activeRoom == 1)
             robotController.backtracking = false;

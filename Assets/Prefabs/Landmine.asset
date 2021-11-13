@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 50
   bonus: 0
-  currentAmmo: 10
-  totalAmmo: 10
+  currentAmmo: 1
+  totalAmmo: 1
   delay: 0
   itemType: 1
   graphics: {fileID: 0}

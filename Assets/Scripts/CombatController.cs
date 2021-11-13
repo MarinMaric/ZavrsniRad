@@ -171,6 +171,7 @@ public class CombatController : MonoBehaviour
         {
             inventory[index].graphics.gameObject.SetActive(false);
             equippedIndex = -1;
+            firing = false;
         }
         else if(inventory[index]!=null)
         {
@@ -184,7 +185,6 @@ public class CombatController : MonoBehaviour
                     combatControls.Combat.Shoot.performed -= ctx => Fire();
                     combatControls.Combat.Shoot.started += ctx => FireContinuous(true);
                     combatControls.Combat.Shoot.canceled += ctx => FireContinuous(false);
-                    effectAudio = inventory[index].graphics.GetComponent<AudioSource>();
                 }
                 else 
                 {
@@ -203,14 +203,14 @@ public class CombatController : MonoBehaviour
                 {
                     combatControls.Combat.Shoot.started += ctx => FireContinuous(true);
                     combatControls.Combat.Shoot.canceled += ctx => FireContinuous(false);
-                    effectAudio = inventory[index].graphics.GetComponent<AudioSource>();
                 }
                 else
                 {
                     combatControls.Combat.Shoot.performed += ctx => Fire();
                 }
             }
-
+            
+            effectAudio = inventory[index].graphics.GetComponent<AudioSource>();
             inventory[index].graphics.gameObject.SetActive(true);
             equippedIndex = index;
         }
@@ -258,21 +258,32 @@ public class CombatController : MonoBehaviour
         var collider = plant.AddComponent<BoxCollider>();
         collider.size = new Vector3(.15f, .15f, .15f);
         collider.isTrigger = true;
+        plant.layer = 0;
+        
+        var plantAudio = plant.GetComponent<AudioSource>();
+        plantAudio.playOnAwake = false;
 
         if (inventory[equippedIndex].name=="Landmine")
         {
             var explosion = Instantiate(effects[2], plant.transform.position, Quaternion.identity);
             effScript.effect = explosion;
             effScript.activateFunction = Explode;
+            plantAudio.clip = Resources.Load<AudioClip>("bomb");
         }
         else if(inventory[equippedIndex].name=="Slowdown")
         {
             effScript.activateFunction = SlowDown;
+            plantAudio.clip = Resources.Load<AudioClip>("slowdown");
         }
         else if (inventory[equippedIndex].name == "Magnet")
         {
             effScript.activateFunction = Stop;
+            plantAudio.clip = Resources.Load<AudioClip>("electricity");
         }
+
+        effScript.audioSrc = plantAudio;
+
+        effectAudio.Play();
     }
     
     void Heal()
@@ -306,7 +317,7 @@ public class CombatController : MonoBehaviour
 
         for (int i = 0; i < inventory.Length; i++)
         {
-            if (inventory[i].name == weaponName)
+            if (inventory[i]!=null && inventory[i].name == weaponName)
             {
                 weapon = inventory[i];
                 dealtDamageEvent.Invoke(weapon);
@@ -349,6 +360,10 @@ public class CombatController : MonoBehaviour
             effects[1].Play();
             Animator anim = transform.GetChild(0).GetChild(0).Find("Shotgun").GetComponent<Animator>();
             anim.SetBool("Fire", true);
+            firing = false;
+        }
+        else
+        {
             firing = false;
         }
     }
