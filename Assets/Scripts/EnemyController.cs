@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ public class EnemyController : MonoBehaviour
     public float selectableRadius, detectableRadius, lookAngle;
     public LayerMask pointsLayer, playerLayer, obstacleLayer;
     public Recorder recorder;
-    List<string> priorities;
+    List<StoredItem> priorities;
     Dictionary<string, int> immunities;
     List<PointControl> points = new List<PointControl>();
     int priorityIndex = -1;
@@ -63,8 +64,21 @@ public class EnemyController : MonoBehaviour
             points.Clear();
             foreach (var h in hits)
             {
-                if (h.collider.tag == priorities[priorityIndex] && h.collider.GetComponent<PointControl>().visited == false && h.collider.GetComponent<PointControl>().roomId==activeRoom)
-                    points.Add(h.collider.GetComponent<PointControl>());
+                if (h.collider.tag == priorities[priorityIndex].Name && h.collider.GetComponent<PointControl>().visited == false && h.collider.GetComponent<PointControl>().roomId == activeRoom)
+                {
+                    if(priorities[priorityIndex].Name == "Normal")
+                    {
+                        points.Add(h.collider.GetComponent<PointControl>());
+                    }
+                    else if(priorities[priorityIndex].Name!="Normal" && Random.Range(1, 10) <= priorities[priorityIndex].Value)
+                    {
+                        points.Add(h.collider.GetComponent<PointControl>());
+                    }
+                    else
+                    {
+                        h.collider.GetComponent<PointControl>().visited = true;
+                    }
+                }
             }
 
             //for now it's just going in circles randomly but later it needs to differentiate
@@ -277,7 +291,8 @@ public class EnemyController : MonoBehaviour
         //if (cc.health <= 0)
         //    killedPlayer = true;
         //else
-            cc.health -= damage;
+        cc.TakeDamage(damage);
+
 
         yield return new WaitForSeconds(delay);
         attacked = false;
@@ -310,5 +325,17 @@ public class EnemyController : MonoBehaviour
         }
         Vector3 dir = new Vector3(Mathf.Sin(angle*Mathf.Deg2Rad), 0, Mathf.Cos(angle*Mathf.Deg2Rad));
         return dir;
+    }
+
+    public void ResetRobot()
+    {
+        health = 100;
+        activeRoom = 1;
+        killedPlayer = false;
+        beganChasing = false;
+        detectedPlayer = false;
+        inRange = false;
+        attacked = false;
+        backtracking = false;
     }
 }

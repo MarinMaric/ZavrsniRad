@@ -37,6 +37,8 @@ public class HidingController : MonoBehaviour
     public delegate void HideDelegate(string tag);
     public event HideDelegate hideEvent;
 
+    public GameObject menu;
+
     private void OnEnable()
     {
         playerTriggers = new PlayerTriggers();
@@ -51,6 +53,7 @@ public class HidingController : MonoBehaviour
         playerTriggers.DummyPlayer.GoingBackwards.started += ctx => Backwards(true);
         playerTriggers.DummyPlayer.GoingBackwards.canceled += ctx => Backwards(false);
 
+        playerTriggers.Menu.ToggleMenu.performed += ctx => ToggleMenu();
 
         ventRotationOG = ventVisual.rotation;
         closetRotationOG = closetVisual.rotation;
@@ -70,6 +73,10 @@ public class HidingController : MonoBehaviour
 
         playerTriggers.DummyPlayer.GoingBackwards.started -= ctx => Backwards(true);
         playerTriggers.DummyPlayer.GoingBackwards.canceled -= ctx => Backwards(false);
+
+        playerTriggers.Menu.ToggleMenu.performed -= ctx => ToggleMenu();
+
+        playerTriggers.Disable();
     }
 
     private void Start()
@@ -226,11 +233,25 @@ public class HidingController : MonoBehaviour
 
     public void ResetPlayer()
     {
-        currentRoom = 1;
+        currentRoom = 2;
         hiding = false;
         TurnOffVisuals();
         TogglePlayer(true);
         hidingSpot = "";
         spotTransform = null;
+        hideText.SetActive(false);
+        leaveText.SetActive(false);
+    }
+
+    void ToggleMenu()
+    {
+        if (menu.activeSelf)
+        {
+            menu.SetActive(false);
+        }
+        else
+        {
+            menu.SetActive(true);
+        }
     }
 }

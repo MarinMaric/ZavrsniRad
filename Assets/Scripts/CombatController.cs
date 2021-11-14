@@ -37,6 +37,8 @@ public class CombatController : MonoBehaviour
             return inventory[equippedIndex].name;        
         } 
     }
+    [SerializeField]
+    Text healthText;
 
     void Start()
     {
@@ -435,11 +437,35 @@ public class CombatController : MonoBehaviour
         equippedIndex = -1;
     }
 
+    public void TakeDamage(int damage)
+    {
+        if (health < damage) { 
+            health = 0;
+        }
+        else
+        {
+            health -= damage;
+        }
+
+        healthText.text = health.ToString();
+    }
+
     public void ResetPlayer()
     {
         health = 100;
+        healthText.text = health.ToString();
+        if(equippedIndex!=-1)
+            inventory[equippedIndex].graphics.gameObject.SetActive(false);
         inventory = new Item[6];
         equippedIndex = -1;
-        weaponIcons.Clear();
+        firing = false;
+        fired = false;
+        foreach(var i in weaponIcons)
+        {
+            i.GetComponent<Image>().enabled = false;
+            i.sprite = null;
+        }
+        firearmIndex = 0;
+        passiveIndex = 2;
     }
 }

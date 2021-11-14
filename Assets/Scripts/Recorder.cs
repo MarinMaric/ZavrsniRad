@@ -24,7 +24,7 @@ public class Recorder : MonoBehaviour
         FindObjectOfType<HidingController>().hideEvent += IncreasePriority;
     }
 
-    public List<string> GetPriorities()
+    public List<StoredItem> GetPriorities()
     {
         List<StoredItem> list = new List<StoredItem>();
 
@@ -36,9 +36,9 @@ public class Recorder : MonoBehaviour
             }
         }
 
-        var namesList = list.OrderByDescending(x => x.Value).Select(x => x.Name).ToList();
+        var prioritiesList = list.OrderByDescending(x => x.Value).ToList();
 
-        return namesList;
+        return prioritiesList;
     }
 
     public Dictionary<string, int> GetImmunities()

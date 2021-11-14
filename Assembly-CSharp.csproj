@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\Pathfinder.cs" />
     <Compile Include="Assets\Scripts\DecoratorNode.cs" />
     <Compile Include="Assets\Scripts\CombatController.cs" />
+    <Compile Include="Assets\Scripts\ShotgunAnimator.cs" />
     <Compile Include="Assets\Scripts\BehaviorTree.cs" />
     <Compile Include="Assets\Scripts\RobotMotor.cs" />
     <Compile Include="Assets\Prefabs\PlayerTriggers.cs" />
@@ -86,8 +87,11 @@
     <Compile Include="Assets\Scripts\ItemGraphics.cs" />
     <Compile Include="Assets\Scripts\GameMaster.cs" />
     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
+    <Compile Include="Assets\Scripts\StoredExtensions.cs" />
     <Compile Include="Assets\Scripts\HidingTrigger.cs" />
-    <Compile Include="Assets\Scripts\ShotgunAnimator.cs" />
+    <Compile Include="Assets\Scripts\EndTrigger.cs" />
+    <Compile Include="Assets\Scripts\PlayButton.cs" />
+    <Compile Include="Assets\Scripts\ExitButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\StarterAssets\Environment\Shaders\Built-in_RP\Triplanar.shader" />

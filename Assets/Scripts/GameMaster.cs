@@ -25,6 +25,12 @@ public class GameMaster : MonoBehaviour
     [SerializeField]
     List<Transform> dropPoints;
 
+    [SerializeField]
+    Animator fadeAnim;
+    bool resetting;
+    [SerializeField]
+    GameObject wonDisplay;
+
     void Awake()
     {
         robotStart = robotController.transform.position;
@@ -36,8 +42,8 @@ public class GameMaster : MonoBehaviour
 
     private void Start()
     {
+        FindObjectOfType<EndTrigger>().victoryEvent += Victory;
         GenerateDrops();
-        //StartCoroutine(TestTeleport());
     }
 
     void Update()
@@ -154,10 +160,13 @@ public class GameMaster : MonoBehaviour
 
     void CheckHealths()
     {
-        if (playerCombatScript.health <= 0)
+        if (playerCombatScript.health <= 0 && !resetting)
         {
+            robotController.gameObject.SetActive(false);
             playerCombatScript.gameObject.SetActive(false);
-            ResetLevel();
+            StartCoroutine(ResetLevel());
+
+            Debug.Log("PLAYER DIED!");
         }
         if (robotController.health <= 0)
         {
@@ -165,25 +174,28 @@ public class GameMaster : MonoBehaviour
 
             //Reset the level but also store the recorded moves to be used later
             recorder.SaveProgress();
-            ResetLevel();
+            StartCoroutine(ResetLevel());
+
+            Debug.Log("PLAYER WON!");
         }
     }
     
-    void ResetLevel()
+    IEnumerator ResetLevel()
     {
+        //FadeEffect
+        fadeAnim.SetBool("fadeIn", true);
+        resetting = true;
+
+        yield return new WaitForSeconds(2);
+
+        fadeAnim.SetBool("fadeIn", false);
+
         //Return AI and player to original positions
         robotController.transform.position = robotStart;
         playerHidingScript.transform.position = playerStart;
 
-        //Reset active rooms
-        playerHidingScript.currentRoom = 1;
-        robotController.activeRoom = 1;
-
         //Reset AI variables
-        robotController.health = 100;
-        robotController.killedPlayer = false;
-        robotController.beganChasing = false;
-        robotController.detectedPlayer = false;
+        robotController.ResetRobot();
         robotController.gameObject.GetComponent<RobotMotor>().targetPosition = robotStart;
 
         //Reset player variables
@@ -209,5 +221,27 @@ public class GameMaster : MonoBehaviour
         //Reactivate them both
         robotController.gameObject.SetActive(true);
         playerHidingScript.gameObject.SetActive(true);
+
+        resetting = false;
+    }
+
+    public void Victory()
+    {
+        robotController.gameObject.SetActive(false);
+        playerCombatScript.gameObject.SetActive(false);
+
+        StartCoroutine(WinSignal());
+    }
+
+    IEnumerator WinSignal()
+    {
+        wonDisplay.SetActive(true);
+
+        yield return new WaitForSeconds(2);
+
+        recorder.SaveProgress();
+        StartCoroutine(ResetLevel());
+
+        wonDisplay.SetActive(false);
     }
 }
