@@ -93,11 +93,12 @@ public class CombatController : MonoBehaviour
             {
                 DisplayEffect();
 
-                if (inventory[equippedIndex].itemType == ItemType.Firearm && AimForEnemy())
+                if (inventory[equippedIndex].itemType == ItemType.Firearm)
                 {
                     if (inventory[equippedIndex].name == "Flamethrower")
-                        StartCoroutine(DealDamage());
-                    else DealDamageInstant();
+                        StartCoroutine(FireFlamethrower());
+                    else
+                        FireOffRound();
                 }
                 else if (inventory[equippedIndex].itemType == ItemType.Passive)
                 {
@@ -232,26 +233,42 @@ public class CombatController : MonoBehaviour
         if (equippedIndex != -1)
             firing = true;
     }
-
-    IEnumerator DealDamage()
+    
+    IEnumerator FireFlamethrower()
     {
         fired = true;
+        inventory[equippedIndex].currentAmmo--;
 
-        //Send signal to enemy to increase priority
-        dealtDamageEvent.Invoke(inventory[equippedIndex]);
+        if (AimForEnemy())
+        {
+            //Send signal to enemy to increase priority
+            dealtDamageEvent.Invoke(inventory[equippedIndex]);
+        }
 
         yield return new WaitForSeconds(inventory[equippedIndex].delay);
+        
         fired = false;
     }
 
-    void DealDamageInstant()
+    void FireOffRound()
     {
-        dealtDamageEvent.Invoke(inventory[equippedIndex]);
+        inventory[equippedIndex].currentAmmo--;
+
+        if (AimForEnemy())
+        {
+            dealtDamageEvent.Invoke(inventory[equippedIndex]);
+        }
+
+        if (inventory[equippedIndex].currentAmmo <= 0)
+        {
+            RanOutOfAmmo();
+        }
     }
 
     void Plant()
     {
         inventory[equippedIndex].currentAmmo--;
+
         GameObject plant = Instantiate(inventory[equippedIndex].graphics.gameObject, transform.position, Quaternion.LookRotation(Vector3.up, transform.forward));
        
         var effScript = plant.AddComponent<SeparateEffect>();
@@ -284,12 +301,30 @@ public class CombatController : MonoBehaviour
         effScript.audioSrc = plantAudio;
 
         effectAudio.Play();
+
+        if (inventory[equippedIndex].currentAmmo <= 0)
+        {
+            RanOutOfAmmo();
+        }
     }
     
     void Heal()
     {
         inventory[equippedIndex].currentAmmo--;
         health = Mathf.Clamp(health + inventory[equippedIndex].bonus, health, 100);
+        
+
+        StartCoroutine(EndHeal());
+    }
+
+    IEnumerator EndHeal()
+    {
+        effectAudio.Play();
+        inventory[equippedIndex].graphics.GetComponent<MeshRenderer>().enabled = false;
+        weaponIcons[equippedIndex].GetComponent<Image>().enabled = false;
+
+        yield return new WaitForSeconds(1);
+        RanOutOfAmmo();
     }
 
     void Explode()
@@ -358,6 +393,7 @@ public class CombatController : MonoBehaviour
         else if (inventory[equippedIndex].name == "Shotgun")
         {
             effects[1].Play();
+            effectAudio.Play();
             Animator anim = transform.GetChild(0).GetChild(0).Find("Shotgun").GetComponent<Animator>();
             anim.SetBool("Fire", true);
             firing = false;
@@ -375,6 +411,28 @@ public class CombatController : MonoBehaviour
         {
             effectAudio.Stop();
         }
+    }
+
+    void RanOutOfAmmo()
+    {
+        //Reset ammo for next round before disabling
+        inventory[equippedIndex].currentAmmo = inventory[equippedIndex].totalAmmo;
+
+        //Turn off graphics and remove from inventory
+        inventory[equippedIndex].graphics.gameObject.SetActive(false);
+        inventory[equippedIndex] = null;
+
+        //Turn off the icon
+        weaponIcons[equippedIndex].GetComponent<Image>().enabled = false;
+        weaponIcons[equippedIndex].sprite = null;
+
+        //Reduce respective index and reset equippedIndex
+        if (equippedIndex < 2)
+            firearmIndex = equippedIndex;
+        else if (equippedIndex < 5)
+            passiveIndex = equippedIndex;
+
+        equippedIndex = -1;
     }
 
     public void ResetPlayer()

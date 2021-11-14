@@ -7343,7 +7343,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 37009e47f45cd5f45b88ae987eb56ded, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.66
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -19599,7 +19599,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857509504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -48.37, y: 1.89, z: 50.98}
+  m_LocalPosition: {x: -48.37, y: 1.89, z: 37.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -22733,7 +22733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4294702224847991131, guid: d6587865eea69ce4d88c1eb75301be74, type: 3}
       propertyPath: moveSpeed
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4294702224847991134, guid: d6587865eea69ce4d88c1eb75301be74, type: 3}
       propertyPath: m_Name
@@ -22876,6 +22876,14 @@ PrefabInstance:
       propertyPath: hidingCamera
       value: 
       objectReference: {fileID: 941688071}
+    - target: {fileID: 7187241694633308874, guid: f9be4d79238074341b6e0580871450c9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7187241694633308917, guid: f9be4d79238074341b6e0580871450c9, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7187241695021569427, guid: f9be4d79238074341b6e0580871450c9, type: 3}
       propertyPath: playerCam
       value: 

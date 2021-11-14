@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba9b1f64438b44f4094a84a74f2fc0b2, type: 3}
   m_Name: Flamethrower
   m_EditorClassIdentifier: 
-  damage: 20
+  damage: 10
   bonus: 0
   currentAmmo: 30
   totalAmmo: 30
