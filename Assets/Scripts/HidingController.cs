@@ -83,6 +83,7 @@ public class HidingController : MonoBehaviour
     {
         //TESTING ONLY
         //gameObject.SetActive(false);
+        Cursor.visible = false;
     }
 
     void Update()
@@ -241,6 +242,10 @@ public class HidingController : MonoBehaviour
         spotTransform = null;
         hideText.SetActive(false);
         leaveText.SetActive(false);
+
+        var inputAsset = GetComponent<StarterAssetsInputs>();
+        inputAsset.move = Vector2.zero;
+        inputAsset.look = Vector2.zero;
     }
 
     void ToggleMenu()
@@ -248,10 +253,12 @@ public class HidingController : MonoBehaviour
         if (menu.activeSelf)
         {
             menu.SetActive(false);
+            Cursor.visible = false;
         }
         else
         {
             menu.SetActive(true);
+            Cursor.visible = true;
         }
     }
 }

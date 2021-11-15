@@ -65,6 +65,12 @@ public class Recorder : MonoBehaviour
         storedInfo.immunities.Where(x => x.Name == weapon.name).First().Value+=4;
     }
 
+    public void IncreaseImmunity(string name)
+    {
+        Debug.Log("Increased immunity to " + name + " by 4%");
+        storedInfo.immunities.Where(x => x.Name == name).First().Value += 4;
+    }
+
     public void LoadPriorities()
     {
         if (File.Exists(filePath))

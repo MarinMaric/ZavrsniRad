@@ -331,20 +331,18 @@ public class CombatController : MonoBehaviour
 
     void Explode()
     {
-        SendSignal("Landmine");
+        enemyScript.TakePassive("Bomb", 50);
     }
 
     void SlowDown()
     {
-        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed /= 5f;
-        SendSignal("SlowDown");
+        enemyScript.GetComponent<RobotMotor>().moveSpeed /= 5f;
         StartCoroutine(RestoreSpeed());
     }
 
     void Stop()
     {
-        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 0f;
-        SendSignal("Magnet");
+        enemyScript.GetComponent<RobotMotor>().moveSpeed = 0f;
         StartCoroutine(StartMoving());
     }
 
@@ -364,13 +362,17 @@ public class CombatController : MonoBehaviour
     }
 
     IEnumerator RestoreSpeed() {
-        yield return new WaitForSeconds(inventory[equippedIndex].delay);
+        int waitValue = Mathf.Abs(10 - 10 * enemyScript.GetImmunity("SlowDown") / 100);
+        yield return new WaitForSeconds(waitValue);
         enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed *= 5f;
+        enemyScript.recorder.IncreaseImmunity("SlowDown");
     }
     IEnumerator StartMoving()
     {
-        yield return new WaitForSeconds(inventory[equippedIndex].delay);
-        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 2f;
+        int waitValue = Mathf.Abs(10 - 10 * enemyScript.GetImmunity("Magnet") / 100);
+        yield return new WaitForSeconds(waitValue);
+        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 6f;
+        enemyScript.recorder.IncreaseImmunity("Magnet");
     }
 
     bool AimForEnemy()
@@ -454,8 +456,11 @@ public class CombatController : MonoBehaviour
     {
         health = 100;
         healthText.text = health.ToString();
-        if(equippedIndex!=-1)
+        if (equippedIndex != -1)
+        {
             inventory[equippedIndex].graphics.gameObject.SetActive(false);
+            inventory[equippedIndex].currentAmmo = inventory[equippedIndex].totalAmmo;
+        }
         inventory = new Item[6];
         equippedIndex = -1;
         firing = false;

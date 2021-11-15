@@ -70,7 +70,7 @@ public class EnemyController : MonoBehaviour
                     {
                         points.Add(h.collider.GetComponent<PointControl>());
                     }
-                    else if(priorities[priorityIndex].Name!="Normal" && Random.Range(1, 10) <= priorities[priorityIndex].Value)
+                    else if(priorities[priorityIndex].Name!="Normal" && Random.Range(1, 6) <= priorities[priorityIndex].Value)
                     {
                         points.Add(h.collider.GetComponent<PointControl>());
                     }
@@ -306,6 +306,22 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void TakePassive(string name, int damage)
+    {
+        if (name == "Landmine")
+        {
+            health-= Mathf.Abs(damage - damage * immunities[name] / 100);
+            recorder.IncreaseImmunity("Landmine");
+        }
+    }
+
+    public int GetImmunity(string name)
+    {
+        if (immunities.ContainsKey(name))
+            return immunities[name];
+        else return 0;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, detectableRadius);
@@ -330,6 +346,7 @@ public class EnemyController : MonoBehaviour
     public void ResetRobot()
     {
         health = 100;
+        motor.moveSpeed = 6;
         activeRoom = 1;
         killedPlayer = false;
         beganChasing = false;
