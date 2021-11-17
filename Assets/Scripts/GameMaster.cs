@@ -71,6 +71,23 @@ public class GameMaster : MonoBehaviour
         }
     }
 
+    void ClearItems()
+    {
+        GameObject[] plants = GameObject.FindGameObjectsWithTag("Plant");
+
+        foreach (var p in plants)
+        {
+            Destroy(p);
+        }
+
+        GameObject[] pickups = GameObject.FindGameObjectsWithTag("Pickup");
+
+        foreach (var p in pickups)
+        {
+            Destroy(p);
+        }
+    }
+
     Transform SetGraphics(string itemName)
     {
         List<string> names = new List<string>(){ "Flamethrower", "Shotgun", "Bomb", "Magnet", "Slowdown", "Heal" };
@@ -202,6 +219,8 @@ public class GameMaster : MonoBehaviour
         playerCombatScript.ResetPlayer();
         playerHidingScript.ResetPlayer();
 
+        
+
         //Reset all points
         var points = FindObjectsOfType<PointControl>();
         foreach (var p in points)
@@ -221,6 +240,10 @@ public class GameMaster : MonoBehaviour
         //Reactivate them both
         robotController.gameObject.SetActive(true);
         playerHidingScript.gameObject.SetActive(true);
+
+        //Clear and recreate drops
+        ClearItems();
+        GenerateDrops();
 
         resetting = false;
     }

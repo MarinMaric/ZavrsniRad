@@ -17,6 +17,7 @@ public class GridGenerator : MonoBehaviour
     public Transform targetWorld;
     public LayerMask obstacleMask;
     public List<Field> path;
+    public bool generatedGrid;
 
     public Field TargetField { 
         get {
@@ -63,6 +64,9 @@ public class GridGenerator : MonoBehaviour
                 grid.gridRows[i].fields.Add(field);    
             }
         }
+
+        generatedGrid = true;
+        Debug.Log("Generated grid " + FindObjectOfType<EnemyController>().activeRoom);
     }
 
     public Field PositionToField(Vector3 worldPosition)
@@ -94,6 +98,17 @@ public class GridGenerator : MonoBehaviour
         //if ((targetField.z>=0 && targetField.z < numberOfRows) && (targetField.x>=0 && targetField.x < fieldsPerRow))
         //    return grid.gridRows[(int)targetField.z].fields[(int)targetField.x];
         //else return null;
+    }
+
+    public bool FieldsClose(Vector3 positionA, Vector3 positionB)
+    {
+        Field fieldA = PositionToField(positionA);
+        Field fieldB = PositionToField(positionB);
+
+        if (Mathf.Abs(fieldA.row - fieldB.row) <= 1 && Mathf.Abs(fieldA.column - fieldB.column) <= 1)
+            return true;
+        else
+            return false;
     }
 
     public List<Field> GetNeighbors(Field field)

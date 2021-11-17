@@ -35,6 +35,8 @@ public class EnemyController : MonoBehaviour
     [HideInInspector]
     public bool killedPlayer = false;
 
+    GridGenerator gc;
+
     void Start()
     {
         targetPosition = transform;
@@ -45,6 +47,7 @@ public class EnemyController : MonoBehaviour
         FindObjectOfType<CombatController>().dealtDamageEvent += TakeDamage;
 
         checkedRooms = new List<int>();
+        gc = FindObjectOfType<GridGenerator>();
     }
     
     public NodeState SelectPoint()
@@ -171,19 +174,35 @@ public class EnemyController : MonoBehaviour
             return NodeState.SUCCESS;
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectableRadius, transform.forward, 0, playerLayer.value, QueryTriggerInteraction.Collide);
+        var gc = FindObjectOfType<GridGenerator>();
 
-        foreach(RaycastHit hit in hits)
+        foreach (RaycastHit hit in hits)
         {
+            if (!gc.generatedGrid)
+            {
+                return NodeState.FAILURE;
+            }
+
             Vector3 direction = (hit.transform.position - transform.position).normalized;
             float targetAngle = Vector3.Angle(transform.forward, direction);
             Debug.DrawRay(transform.position, direction, Color.red);
             if (targetAngle < lookAngle / 2)
             {
                 //Just in case the robot picks it up when it doesn't even have that priority
-                if(FindObjectOfType<HidingController>().hiding && !priorities.Contains(FindObjectOfType<HidingController>().hidingSpot))
+                var hc = FindObjectOfType<HidingController>();
+                
+                if(hc.hiding && hc.currentRoom==activeRoom)
                 {
-                    detectedPlayer = false;
-                    return NodeState.FAILURE;
+                    if (!priorities.Contains(hc.hidingSpot) ||  !gc.FieldsClose(hc.spotTransform.position, targetPosition.position))
+                    {
+                        var spot = gc.PositionToField(hc.spotTransform.position);
+                        var target = gc.PositionToField(targetPosition.position);
+                        Debug.Log("(" + spot.row + ", " + spot.column + " vs " + "(" + target.row + ", " + target.column + ")");
+
+                        detectedPlayer = false;
+                        return NodeState.FAILURE;
+                    }
+
                 }
 
                 RaycastHit checkObstacle;
@@ -354,5 +373,9 @@ public class EnemyController : MonoBehaviour
         inRange = false;
         attacked = false;
         backtracking = false;
+
+        recorder.LoadPriorities();
+        priorities = recorder.GetPriorities();
+        immunities = recorder.GetImmunities();
     }
 }

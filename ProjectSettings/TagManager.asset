@@ -12,6 +12,8 @@ TagManager:
   - Exit
   - CinemachineTarget
   - Back
+  - Plant
+  - Pickup
   layers:
   - Default
   - TransparentFX

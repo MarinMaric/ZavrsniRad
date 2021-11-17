@@ -25,10 +25,6 @@ public class PointControl : MonoBehaviour
     {
         if (other.tag == "Robot")
         {
-            if (transform.tag == "Exit")
-            {
-                Debug.Log("Marked as visited");
-            }
             visited = true;
         }
     }
@@ -37,10 +33,7 @@ public class PointControl : MonoBehaviour
     {
         if (roomId != FindObjectOfType<EnemyController>().activeRoom)
         {
-            if (transform.tag == "Exit")
-            {
-                Debug.Log("Freed up");
-            }
+
             visited = false;
         }
     }

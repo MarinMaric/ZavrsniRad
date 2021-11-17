@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &957186126319027327
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110886178650733471}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.020000009, y: 0.04918095, z: 0.031593814}
+  m_Center: {x: 0.0000000025143803, y: -0.019955117, z: -0.0000107042315}
 --- !u!1 &957186125801717726
 GameObject:
   m_ObjectHideFlags: 0
@@ -13,7 +26,7 @@ GameObject:
   - component: {fileID: 957186125801717721}
   m_Layer: 0
   m_Name: Flamethrower
-  m_TagString: Untagged
+  m_TagString: Pickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,19 +73,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: d6428f1c3716c7a49a195605cf80be9f, type: 2}
   graphics: {fileID: 0}
---- !u!65 &957186126319027327
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 110886178650733471}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.020000009, y: 0.04918095, z: 0.031593814}
-  m_Center: {x: 0.0000000025143803, y: -0.019955117, z: -0.0000107042315}
 --- !u!1001 &957186125677921998
 PrefabInstance:
   m_ObjectHideFlags: 0

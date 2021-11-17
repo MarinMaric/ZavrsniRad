@@ -277,6 +277,7 @@ public class CombatController : MonoBehaviour
         var collider = plant.AddComponent<BoxCollider>();
         collider.size = new Vector3(.15f, .15f, .15f);
         collider.isTrigger = true;
+        plant.tag = "Plant";
         plant.layer = 0;
         
         var plantAudio = plant.GetComponent<AudioSource>();
@@ -324,6 +325,7 @@ public class CombatController : MonoBehaviour
         effectAudio.Play();
         inventory[equippedIndex].graphics.GetComponent<MeshRenderer>().enabled = false;
         weaponIcons[equippedIndex].GetComponent<Image>().enabled = false;
+        healthText.text = health.ToString();
 
         yield return new WaitForSeconds(1);
         RanOutOfAmmo();
@@ -331,7 +333,7 @@ public class CombatController : MonoBehaviour
 
     void Explode()
     {
-        enemyScript.TakePassive("Bomb", 50);
+        enemyScript.TakePassive("Landmine", 50);
     }
 
     void SlowDown()

@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!65 &5770336510796082617
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6689309627617319704}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.020819146, y: 0.018010175, z: 0.002145231}
-  m_Center: {x: 0.000000059604645, y: -0.000000060070306, z: 0.0012729632}
 --- !u!1 &5770336511038029184
 GameObject:
   m_ObjectHideFlags: 0
@@ -26,7 +13,7 @@ GameObject:
   - component: {fileID: 5770336511038029187}
   m_Layer: 0
   m_Name: Bomb
-  m_TagString: Untagged
+  m_TagString: Pickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,6 +60,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: c1bbc50906ede3945b790aa39f6124f4, type: 2}
   graphics: {fileID: 0}
+--- !u!65 &5770336510796082617
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6689309627617319704}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.020819146, y: 0.018010175, z: 0.002145231}
+  m_Center: {x: 0.000000059604645, y: -0.000000060070306, z: 0.0012729632}
 --- !u!1001 &5770336510498186825
 PrefabInstance:
   m_ObjectHideFlags: 0

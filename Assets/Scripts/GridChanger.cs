@@ -29,6 +29,7 @@ public class GridChanger : MonoBehaviour
         if (other.tag=="Robot")
         {
             var enemyController = FindObjectOfType<EnemyController>();
+            FindObjectOfType<GridGenerator>().generatedGrid = false;
 
             //TEST TELEPORT
             //if (index == enemyController.activeRoom)

@@ -17,7 +17,8 @@ public class HidingController : MonoBehaviour
     public LayerMask hidingMask;
     [HideInInspector]
     public string hidingSpot;
-    Transform spotTransform;
+    [HideInInspector]
+    public Transform spotTransform;
     public bool sneaking, moving;
     [HideInInspector]
     public bool backwards;
@@ -147,7 +148,7 @@ public class HidingController : MonoBehaviour
 
             TogglePlayer(true);
             TurnOffVisuals();
-            Debug.Log("Player left the hiding spot");
+            //Debug.Log("Player left the hiding spot");
 
             StartCoroutine(KeepSafe());
         }
@@ -157,7 +158,7 @@ public class HidingController : MonoBehaviour
             SetupCamera();
             hiding = true;
             alreadyFreed = false;
-            Debug.Log("Player hid himself");
+            //Debug.Log("Player hid himself");
         }
     }
 

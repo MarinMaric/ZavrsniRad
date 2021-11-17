@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\SeparateEffect.cs" />
+    <Compile Include="Assets\Scripts\PlayButton.cs" />
     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
     <Compile Include="Assets\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
@@ -89,9 +90,9 @@
     <Compile Include="Assets\Scripts\SpawnPoint.cs" />
     <Compile Include="Assets\Scripts\StoredExtensions.cs" />
     <Compile Include="Assets\Scripts\HidingTrigger.cs" />
-    <Compile Include="Assets\Scripts\EndTrigger.cs" />
-    <Compile Include="Assets\Scripts\PlayButton.cs" />
     <Compile Include="Assets\Scripts\ExitButton.cs" />
+    <Compile Include="Assets\Scripts\EndTrigger.cs" />
+    <Compile Include="Assets\Scripts\ScreenControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\StarterAssets\Environment\Shaders\Built-in_RP\Triplanar.shader" />
