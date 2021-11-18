@@ -340,6 +340,7 @@ public class CombatController : MonoBehaviour
     {
         enemyScript.GetComponent<RobotMotor>().moveSpeed /= 5f;
         StartCoroutine(RestoreSpeed());
+        enemyScript.recorder.IncreaseImmunity("SlowDown");
     }
 
     void Stop()
@@ -366,8 +367,11 @@ public class CombatController : MonoBehaviour
     IEnumerator RestoreSpeed() {
         int waitValue = Mathf.Abs(10 - 10 * enemyScript.GetImmunity("SlowDown") / 100);
         yield return new WaitForSeconds(waitValue);
-        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed *= 5f;
-        enemyScript.recorder.IncreaseImmunity("SlowDown");
+        var motor = enemyScript.gameObject.GetComponent<RobotMotor>();
+        if (motor.moveSpeed != 6f)
+        {
+            motor.moveSpeed = 6f;
+        }
     }
     IEnumerator StartMoving()
     {
