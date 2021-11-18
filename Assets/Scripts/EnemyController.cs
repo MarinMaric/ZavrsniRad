@@ -202,7 +202,11 @@ public class EnemyController : MonoBehaviour
                         detectedPlayer = false;
                         return NodeState.FAILURE;
                     }
-
+                }
+                else if(!hc.hiding && hc.currentRoom!=activeRoom)
+                {
+                    detectedPlayer = false;
+                    return NodeState.FAILURE;
                 }
 
                 RaycastHit checkObstacle;
