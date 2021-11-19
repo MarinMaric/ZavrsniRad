@@ -38,7 +38,7 @@ public class HidingController : MonoBehaviour
     public delegate void HideDelegate(string tag);
     public event HideDelegate hideEvent;
 
-    public GameObject menu;
+    public GameObject menu, roundCounter;
 
     private void OnEnable()
     {
@@ -254,11 +254,13 @@ public class HidingController : MonoBehaviour
         if (menu.activeSelf)
         {
             menu.SetActive(false);
+            roundCounter.SetActive(false);
             Cursor.visible = false;
         }
         else
         {
             menu.SetActive(true);
+            roundCounter.SetActive(true);
             Cursor.visible = true;
         }
     }

@@ -72,12 +72,19 @@ public class Recorder : MonoBehaviour
         storedInfo.immunities.Where(x => x.Name == name).First().Value += 4;
     }
 
+    public void IncreaseRound()
+    {
+        storedInfo.round++;
+    }
+
     public void LoadPriorities()
     {
         if (File.Exists(filePath))
         {
             string progressJson = File.ReadAllText(filePath);
             storedInfo = JsonUtility.FromJson<StoredContents>(progressJson);
+            GetComponent<GameMaster>().roundCount = storedInfo.round;
+            GetComponent<GameMaster>().roundText.text = "ROUND: " + storedInfo.round.ToString();
         }
         else
         {
@@ -96,6 +103,9 @@ public class Recorder : MonoBehaviour
                 new StoredItem{Name="Magnet", Value = 0},
                 new StoredItem{Name="SlowDown", Value =0}
             };
+            storedInfo.round = 1;
+            GetComponent<GameMaster>().roundCount=1;
+            GetComponent<GameMaster>().roundText.text = "ROUND: 1";
         }
     }
 
@@ -118,4 +128,5 @@ public class StoredContents
 {
     public List<StoredItem> priorities;
     public List<StoredItem> immunities;
+    public int round;
 }

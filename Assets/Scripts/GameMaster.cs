@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour
 {
@@ -18,7 +20,8 @@ public class GameMaster : MonoBehaviour
     Recorder recorder;
     public float teleportDistance;
 
-    Vector3 robotStart, playerStart;
+    Vector3 robotStart, playerStart, shotgunPositionOG;
+    Quaternion playerRotationOG, shotgunRotationOG;
 
     [SerializeField]
     List<GameObject> pickups;
@@ -30,11 +33,18 @@ public class GameMaster : MonoBehaviour
     bool resetting;
     [SerializeField]
     GameObject wonDisplay;
+    public Text roundText;
+
+    int round;
+    public int roundCount;
 
     void Awake()
     {
         robotStart = robotController.transform.position;
         playerStart = playerHidingScript.transform.position;
+        playerRotationOG = playerHidingScript.transform.rotation;
+        shotgunRotationOG = playerHidingScript.transform.GetChild(0).GetChild(0).GetChild(1).localRotation;
+        shotgunPositionOG = playerHidingScript.transform.GetChild(0).GetChild(0).GetChild(1).localPosition;
 
         gridGenerator = GetComponent<GridGenerator>();
         recorder = GetComponent<Recorder>();
@@ -185,13 +195,15 @@ public class GameMaster : MonoBehaviour
 
             Debug.Log("PLAYER DIED!");
         }
-        if (robotController.health <= 0)
+        if (robotController.health <= 0 && !resetting)
         {
             robotController.gameObject.SetActive(false);
-
+            resetting = true;
             //Reset the level but also store the recorded moves to be used later
-            recorder.SaveProgress();
-            StartCoroutine(ResetLevel());
+            //recorder.SaveProgress();
+            //StartCoroutine(ResetLevel());
+
+            Victory();
 
             Debug.Log("PLAYER WON!");
         }
@@ -210,6 +222,13 @@ public class GameMaster : MonoBehaviour
         //Return AI and player to original positions
         robotController.transform.position = robotStart;
         playerHidingScript.transform.position = playerStart;
+        playerHidingScript.transform.rotation = playerRotationOG;
+        var shotgun = playerHidingScript.transform.GetChild(0).GetChild(0).GetChild(1);
+        shotgun.localPosition = shotgunPositionOG;
+        if (shotgun.localRotation != shotgunRotationOG)
+        {
+            shotgun.localRotation = shotgunRotationOG;
+        }
 
         //Reset AI variables
         robotController.ResetRobot();
@@ -253,7 +272,15 @@ public class GameMaster : MonoBehaviour
         robotController.gameObject.SetActive(false);
         playerCombatScript.gameObject.SetActive(false);
 
-        StartCoroutine(WinSignal());
+
+        if (roundCount < 10)
+        {
+            StartCoroutine(WinSignal());
+        }
+        else
+        {
+            StartCoroutine(GameComplete());
+        }
     }
 
     IEnumerator WinSignal()
@@ -261,10 +288,28 @@ public class GameMaster : MonoBehaviour
         wonDisplay.SetActive(true);
 
         yield return new WaitForSeconds(2);
-
+        round++;
+        recorder.IncreaseRound();
+        roundText.text = "ROUND: " + (round + 1).ToString();
         recorder.SaveProgress();
         StartCoroutine(ResetLevel());
 
         wonDisplay.SetActive(false);
+    }
+
+    IEnumerator GameComplete()
+    {
+        //display text
+        var wonText = wonDisplay.transform.GetChild(0);
+        wonText.GetComponent<Text>().text = "GAME COMPLETED";
+        wonDisplay.SetActive(true);
+
+        //fade to dark
+        fadeAnim.SetBool("fadeIn", true);
+
+        yield return new WaitForSeconds(2);
+
+        Destroy(FindObjectOfType<MenuMaster>().gameObject);
+        SceneManager.LoadScene(0);
     }
 }
