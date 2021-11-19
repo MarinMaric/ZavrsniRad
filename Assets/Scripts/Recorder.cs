@@ -13,7 +13,8 @@ public class Recorder : MonoBehaviour
 
     void Awake()
     {
-        filePath = Application.dataPath + "/progress.json";
+        string saveName = FindObjectOfType<MenuMaster>().saveName;
+        filePath = Application.dataPath + "/"  + saveName + ".json";
         LoadPriorities();
 
         FindObjectOfType<CombatController>().dealtDamageEvent += IncreaseImmunity;

@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\BehaviorTree.cs" />
     <Compile Include="Assets\Scripts\RobotMotor.cs" />
     <Compile Include="Assets\Prefabs\PlayerTriggers.cs" />
+    <Compile Include="Assets\Scripts\ScreenControl.cs" />
     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualJoystick.cs" />
     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
     <Compile Include="Assets\Scripts\GridChanger.cs" />
@@ -92,7 +93,7 @@
     <Compile Include="Assets\Scripts\HidingTrigger.cs" />
     <Compile Include="Assets\Scripts\ExitButton.cs" />
     <Compile Include="Assets\Scripts\EndTrigger.cs" />
-    <Compile Include="Assets\Scripts\ScreenControl.cs" />
+    <Compile Include="Assets\Scripts\MenuMaster.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\StarterAssets\Environment\Shaders\Built-in_RP\Triplanar.shader" />
