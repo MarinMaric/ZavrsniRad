@@ -7,6 +7,7 @@ public class PlayButton : MonoBehaviour
 {
     public void Play(int level)
     {
+        Destroy(FindObjectOfType<MenuMaster>().gameObject);
         SceneManager.LoadSceneAsync(level);
     }
 }
