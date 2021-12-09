@@ -15164,6 +15164,18 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 4135013736301766994}
+    - target: {fileID: 8762286024517199034, guid: 9c489a8547f4d9e4387da15a4ff82c81, type: 3}
+      propertyPath: Damping.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762286024517199034, guid: 9c489a8547f4d9e4387da15a4ff82c81, type: 3}
+      propertyPath: Damping.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762286024517199034, guid: 9c489a8547f4d9e4387da15a4ff82c81, type: 3}
+      propertyPath: Damping.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c489a8547f4d9e4387da15a4ff82c81, type: 3}
 --- !u!1001 &1328154871
@@ -26895,6 +26907,10 @@ PrefabInstance:
     - target: {fileID: 7220553611274892997, guid: f9be4d79238074341b6e0580871450c9, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.202
+      objectReference: {fileID: 0}
+    - target: {fileID: 7220553611274892997, guid: f9be4d79238074341b6e0580871450c9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.11
       objectReference: {fileID: 0}
     - target: {fileID: 7220553611274892997, guid: f9be4d79238074341b6e0580871450c9, type: 3}
       propertyPath: m_LocalRotation.w
