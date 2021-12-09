@@ -2,6 +2,8 @@
 
 The goal of this project is to provide a fresh experience in the survival genre through an interesting gameplay mechanic that ties the player's moves to the intelligence of the AI opponent. The player has to survive 10 rounds in a row by hiding in closets and vents of the level or by defeating the robot in a battle. Every time the player wins a round (either by using a certain hiding spot to outmaneuver the robot or by defeating it with a particular weapon) next round the robot will be more capable of countering that strategy. This forces the player to use different strategies in order to complete the game.
 
+The AI has been implemented from scratch with Behavior Trees.
+
 # Instructions
 
 ## Hiding
