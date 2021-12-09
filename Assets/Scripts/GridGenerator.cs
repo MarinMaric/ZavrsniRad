@@ -48,6 +48,8 @@ public class GridGenerator : MonoBehaviour
       
         grid = new Grid();
         grid.gridRows = new List<GridRow>();
+        Vector3 displacementLeft = new Vector3((fieldsPerRow / 2) * fieldWidth, 0, (numberOfRows / 2) * fieldWidth);
+        Vector3 rowStart = gridCenter - displacementLeft;
 
         for (int i = 0; i < numberOfRows; i++)
         {
@@ -55,18 +57,26 @@ public class GridGenerator : MonoBehaviour
             grid.gridRows.Add(new GridRow());
             grid.gridRows[i].fields = new List<Field>();
 
+
             for (int j = 0; j < fieldsPerRow; j++)
             {
                 //crate individual field
-                Vector3 position = gridCenter - new Vector3((fieldsPerRow / 2) * fieldWidth, 0, (numberOfRows / 2) * fieldWidth) + new Vector3(j * (fieldWidth + fieldPadding), 0, i * (fieldWidth + fieldPadding));
-                bool traversible = Physics.CheckBox(position, Vector3.one * fieldWidth / 2, Quaternion.identity, obstacleMask, QueryTriggerInteraction.Ignore)?false:true;
+                Vector3 position = rowStart + new Vector3(j * fieldWidth, 0, i * fieldWidth);
+                bool traversible = CheckForObstacle(position);
                 Field field = new Field(position, traversible, i, j); 
                 grid.gridRows[i].fields.Add(field);    
             }
         }
 
         generatedGrid = true;
-        Debug.Log("Generated grid " + FindObjectOfType<EnemyController>().activeRoom);
+    }
+
+    bool CheckForObstacle(Vector3 position)
+    {
+        return Physics.CheckBox(position, 
+            Vector3.one * fieldWidth / 2, Quaternion.identity, obstacleMask, 
+            QueryTriggerInteraction.Ignore) 
+            ? false : true;
     }
 
     public Field PositionToField(Vector3 worldPosition)
@@ -85,19 +95,14 @@ public class GridGenerator : MonoBehaviour
 
         if (targetWorld.tag == "Player")
         {
-            if ((targetField.z >= 0 && targetField.z < numberOfRows) && (targetField.x >= 0 && targetField.x < fieldsPerRow))
+            if ((targetField.z >= 0 && targetField.z < numberOfRows) && 
+                    (targetField.x >= 0 && targetField.x < fieldsPerRow))
                 return grid.gridRows[(int)targetField.z].fields[(int)targetField.x];
             else return null;
         }
 
-        return grid.gridRows[(int)Mathf.Clamp(targetField.z, 0, numberOfRows - 1)].fields[(int)Mathf.Clamp(targetField.x, 0, fieldsPerRow - 1)];
-
-        //if (fieldsPerRow == 20)
-        //    Debug.Log(targetWorld.name);
-
-        //if ((targetField.z>=0 && targetField.z < numberOfRows) && (targetField.x>=0 && targetField.x < fieldsPerRow))
-        //    return grid.gridRows[(int)targetField.z].fields[(int)targetField.x];
-        //else return null;
+        return grid.gridRows[(int)Mathf.Clamp(targetField.z, 0, numberOfRows - 1)]
+            .fields[(int)Mathf.Clamp(targetField.x, 0, fieldsPerRow - 1)];
     }
 
     public bool FieldsClose(Vector3 positionA, Vector3 positionB)

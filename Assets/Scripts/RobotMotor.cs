@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class RobotMotor : MonoBehaviour
 {
-    public float moveSpeed=5f;
+    public float moveSpeed;
+    [HideInInspector]
+    public float ogMoveSpeed;
     public Vector3 targetPosition;
     public List<Vector3> waypoints;
     Vector3 currentWaypoint;
     int index;
+
+    private void Start()
+    {
+        ogMoveSpeed = moveSpeed;
+    }
 
     private void Update()
     {

@@ -368,16 +368,17 @@ public class CombatController : MonoBehaviour
         int waitValue = Mathf.Abs(10 - 10 * enemyScript.GetImmunity("SlowDown") / 100);
         yield return new WaitForSeconds(waitValue);
         var motor = enemyScript.gameObject.GetComponent<RobotMotor>();
-        if (motor.moveSpeed != 6f)
+        if (motor.moveSpeed != motor.ogMoveSpeed)
         {
-            motor.moveSpeed = 6f;
+            motor.moveSpeed = motor.ogMoveSpeed;
         }
     }
     IEnumerator StartMoving()
     {
         int waitValue = Mathf.Abs(10 - 10 * enemyScript.GetImmunity("Magnet") / 100);
         yield return new WaitForSeconds(waitValue);
-        enemyScript.gameObject.GetComponent<RobotMotor>().moveSpeed = 6f;
+        var motor = enemyScript.gameObject.GetComponent<RobotMotor>();
+        motor.moveSpeed = motor.ogMoveSpeed;
         enemyScript.recorder.IncreaseImmunity("Magnet");
     }
 

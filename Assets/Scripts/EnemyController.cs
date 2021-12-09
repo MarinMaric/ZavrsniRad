@@ -54,6 +54,7 @@ public class EnemyController : MonoBehaviour
     {
         if (transform.position == motor.targetPosition && !detectedPlayer)
         {
+            #region select from priorities
             if (points.Count == 0 && priorityIndex+1 < priorities.Count)
             {
                 priorityIndex++;
@@ -84,9 +85,6 @@ public class EnemyController : MonoBehaviour
                 }
             }
 
-            //for now it's just going in circles randomly but later it needs to differentiate
-            //between visited points and those left unchecked
-
             if (points.Count > 0)
             {
                 int index= (int)Random.Range(0, points.Count); 
@@ -98,8 +96,11 @@ public class EnemyController : MonoBehaviour
                 points.RemoveAt(index);
                 resetPathEvent.Invoke();
             }
+            #endregion
+            #region leave room
             else if (priorityIndex == priorities.Count - 1)
             {
+                #region comment
                 //TEST ONLY
                 //if(activeRoom==9)
                 //    SceneManager.LoadScene(0);
@@ -107,7 +108,8 @@ public class EnemyController : MonoBehaviour
                 //if all the points in the room have been checked then mark the whole room as checked
                 //checkedRooms.Add(activeRoom);
 
-                //prepare priority for next room
+                //prepare priority for next room 
+                #endregion
                 priorityIndex = -1;
 
                 //move on to next room (later I can make it go back as well)
@@ -143,6 +145,95 @@ public class EnemyController : MonoBehaviour
                     //}
                 }
             }
+            #endregion
+        }
+
+        return NodeState.SUCCESS;
+    }
+
+    public NodeState IsPositionReached()
+    {
+        if (transform.position != motor.targetPosition || detectedPlayer)
+            return NodeState.SUCCESS;
+        else return NodeState.FAILURE;
+    }
+    public NodeState SelectFromPriorities()
+    {
+        if (points.Count == 0 && priorityIndex + 1 < priorities.Count)
+        {
+            priorityIndex++;
+        }
+        else if (priorityIndex == -1)
+        {
+            priorityIndex++;
+        }
+
+        //If point is reached and no player has been found, go to random unvisited point with said tag
+        var hits = Physics.SphereCastAll(transform.position, selectableRadius, transform.forward, selectableRadius, pointsLayer.value, QueryTriggerInteraction.Collide);
+        points.Clear();
+        foreach (var h in hits)
+        {
+            if (h.collider.tag == priorities[priorityIndex].Name && h.collider.GetComponent<PointControl>().visited == false && h.collider.GetComponent<PointControl>().roomId == activeRoom)
+            {
+                if (priorities[priorityIndex].Name == "Normal")
+                {
+                    points.Add(h.collider.GetComponent<PointControl>());
+                }
+                else if (priorities[priorityIndex].Name != "Normal" && Random.Range(1, 6) <= priorities[priorityIndex].Value)
+                {
+                    points.Add(h.collider.GetComponent<PointControl>());
+                }
+                else
+                {
+                    h.collider.GetComponent<PointControl>().visited = true;
+                }
+            }
+        }
+
+        if (points.Count > 0)
+        {
+            int index = (int)Random.Range(0, points.Count);
+            while (points[index].transform == targetPosition)
+            {
+                index = (int)Random.Range(0, points.Count);
+            }
+            targetPosition = points[index].transform;
+            points.RemoveAt(index);
+            resetPathEvent.Invoke();
+        }
+        else if (priorityIndex == priorities.Count - 1)
+        {
+            return NodeState.FAILURE;
+        }
+
+        return NodeState.SUCCESS;
+    }
+    public NodeState LeaveRoom()
+    {
+        priorityIndex = -1;
+
+        var hits = Physics.SphereCastAll(transform.position, selectableRadius, transform.forward, selectableRadius, pointsLayer.value, QueryTriggerInteraction.Collide);
+
+        //move on to next room (later I can make it go back as well)
+        foreach (var h in hits)
+        {
+            //h.collider.GetComponent<PointControl>().visited = false;
+            if (!backtracking)
+            {
+                if (h.collider.tag == "Exit" && h.collider.GetComponent<PointControl>().roomId == activeRoom && h.collider.GetComponent<PointControl>().visited == false)
+                    points.Add(h.collider.GetComponent<PointControl>());
+            }
+            else
+            {
+                if (h.collider.tag == "Back" && h.collider.GetComponent<PointControl>().roomId == activeRoom)
+                    points.Add(h.collider.GetComponent<PointControl>());
+            }
+        }
+
+        if (points.Count > 0)
+        {
+            targetPosition = points[0].transform;
+            resetPathEvent.Invoke();
         }
 
         return NodeState.SUCCESS;
@@ -169,7 +260,7 @@ public class EnemyController : MonoBehaviour
     }
 
      public NodeState CheckForPlayer()
-    {
+     {
         if (beganChasing)
             return NodeState.SUCCESS;
 
@@ -369,7 +460,7 @@ public class EnemyController : MonoBehaviour
     public void ResetRobot()
     {
         health = 100;
-        motor.moveSpeed = 6;
+        motor.moveSpeed = motor.ogMoveSpeed;
         activeRoom = 1;
         killedPlayer = false;
         beganChasing = false;
