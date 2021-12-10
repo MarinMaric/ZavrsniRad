@@ -315,6 +315,7 @@ public class GameMaster : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         Destroy(FindObjectOfType<MenuMaster>().gameObject);
+        Cursor.visible = true;
         SceneManager.LoadScene(0);
     }
 }
