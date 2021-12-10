@@ -9,6 +9,7 @@ public class MenuMaster : MonoBehaviour
 {
     public GameObject mainMenu, loadMenu;
     public List<Text> slotTexts;
+    public List<GameObject> deleteButtons;
     public string saveName;
 
     void Start()
@@ -21,6 +22,10 @@ public class MenuMaster : MonoBehaviour
             if (File.Exists(path))
             {
                 slotTexts[i].text = "Save " + (i + 1).ToString();
+            }
+            else
+            {
+                deleteButtons[i].SetActive(false);
             }
         }
     }
@@ -48,6 +53,28 @@ public class MenuMaster : MonoBehaviour
         
         saveName = save;
         SceneManager.LoadScene(1);
+    }
+
+    public void DeleteSave(int index)
+    {
+        string path = Application.dataPath + "/Save" + (index+1) + ".json";
+        File.Delete(path);
+        deleteButtons[index].SetActive(false);
+        RefreshMenu();
+    }
+
+    void RefreshMenu()
+    {
+        foreach (var t in slotTexts)
+        {
+            var saveName = t.transform.parent.name;
+            string path = Application.dataPath + "/" + saveName  + ".json";
+
+            if (!File.Exists(path))
+            {
+                t.text = "EMPTY";
+            }
+        }
     }
 
     public void Exit()

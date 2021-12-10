@@ -68,8 +68,14 @@ public class Recorder : MonoBehaviour
 
     public void IncreaseImmunity(string name)
     {
-        Debug.Log("Increased immunity to " + name + " by 4%");
-        storedInfo.immunities.Where(x => x.Name == name).First().Value += 4;
+        if(name=="Shotgun" || name == "Flamethrower")
+        {
+            storedInfo.immunities.Where(x => x.Name == name).First().Value += 4;
+        }
+        else
+        {
+            storedInfo.immunities.Where(x => x.Name == name).First().Value += 20;
+        }
     }
 
     public void IncreaseRound()
